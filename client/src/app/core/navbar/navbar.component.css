@@ -1,0 +1,19 @@
+.logged-as {
+  padding: 0 !important;
+  font-size: 0.9rem;
+}
+
+@media screen and (max-width: 600px) {
+  .logged-as {
+    font-size: 0.6rem !important;
+  }
+
+  .navbar-brand {
+    font-size: 0.8rem;
+  }
+
+  li a {
+    font-size: 0.8rem !important;
+    padding: 0.1rem;
+  }
+}
