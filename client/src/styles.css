@@ -1,0 +1,25 @@
+form.sign {
+  margin: auto;
+  margin-top: 3rem;
+  padding: 1rem;
+  max-width: 600px;
+  background: rgba(173, 203, 219, 0.808);
+  border-radius: 1rem;
+  max-width: 50%;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+}
+
+body {
+  /*  background-image: url("./assets/backgound.jpg"); */
+  /*   background-size: cover; */
+}
+
+@media screen and (max-width: 600px) {
+  form.sign {
+    max-width: 90%;
+  }
+}
