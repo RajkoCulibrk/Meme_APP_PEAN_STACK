@@ -9,8 +9,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { SigninComponent } from './signin/signin.component';
 import { SignupComponent } from './signup/signup.component';
+import { HomeComponent } from './home/home.component';
+import { SinglePostComponent } from './single-post/single-post.component';
 @NgModule({
-  declarations: [AppComponent, NavbarComponent, SigninComponent, SignupComponent],
+  declarations: [AppComponent, NavbarComponent, SigninComponent, SignupComponent, HomeComponent, SinglePostComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

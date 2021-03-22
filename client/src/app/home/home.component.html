@@ -1,0 +1,8 @@
+<h3 class="text-center">All Posts</h3>
+<div class="container">
+  <app-single-post
+    class="d-flex justify-content-center"
+    *ngFor="let post of posts"
+    [post]="post"
+  ></app-single-post>
+</div>

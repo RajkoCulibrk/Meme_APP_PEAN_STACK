@@ -1,0 +1,11 @@
+.card {
+  max-width: 50%;
+
+  justify-content: center;
+}
+
+@media screen and (max-width: 600px) {
+  .card {
+    min-width: 90%;
+  }
+}

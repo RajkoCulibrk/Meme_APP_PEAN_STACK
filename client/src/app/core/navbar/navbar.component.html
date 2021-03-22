@@ -1,10 +1,18 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">Meme app</a>
-    <div class="logged-as d-flex flex-column ml-auto mr-2">
+    <a
+      class="navbar-brand"
+      [routerLink]="['/']"
+      routerLinkActive="router-link-active"
+      >Meme app
+    </a>
+    <div
+      *ngIf="provider.user"
+      class="logged-as d-flex flex-column ml-auto mr-2"
+    >
       <span>Logged in as : </span>
 
-      <span>{{ provider.user?.user_email }}</span>
+      <span>{{ provider.user?.user_name | titlecase }}</span>
     </div>
 
     <ul class="navbar-nav d-flex flex-row">
@@ -16,21 +24,24 @@
           >My memes</a
         >
       </li>
-      <li *ngIf="!provider.user" class="nav-item">
+      <li *ngIf="!provider.user && currentRoute == '/signin'" class="nav-item">
         <a
           class="nav-link"
           [routerLink]="['/signup']"
           routerLinkActive="router-link-active"
-          >Register</a
-        >
+          >Register <fa-icon [icon]="faUserPlus"></fa-icon
+        ></a>
       </li>
-      <li *ngIf="!provider.user" class="nav-item ml-2">
+      <li
+        *ngIf="!provider.user && currentRoute !== '/signin'"
+        class="nav-item ml-2"
+      >
         <a
           class="nav-link"
           [routerLink]="['/signin']"
           routerLinkActive="router-link-active"
-          >Login</a
-        >
+          >Login <fa-icon [icon]="faSignInAlt"></fa-icon
+        ></a>
       </li>
       <li
         (click)="provider.logout()"
