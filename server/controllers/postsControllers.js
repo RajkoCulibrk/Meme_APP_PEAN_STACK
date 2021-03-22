@@ -53,9 +53,25 @@ export const getPosts = async (req, res, next) => {
 export const getSinglePost = async (req, res, next) => {
   try {
     const post_id = req.params.id;
-    const post = await pool.query("SELECT * FROM posts WHERE post_id = $1", [
-      post_id
-    ]);
+    const post = await pool.query(
+      `select 
+    p.post_id,p.title,p.image_public_url,
+    COALESCE(l.likes,0) as likes, 
+    COALESCE(l.dislikes,0) as dislikes 
+	
+	from posts  as p
+  left join (select post_id, 
+         COUNT(value) filter (where value=true) as likes,
+         COUNT(value) filter (where value=false) as dislikes
+         from likesdislikes
+			
+          group by post_id
+        
+        ) as l
+         on p.post_id = l.post_id
+		 where p.post_id = $1`,
+      [post_id]
+    );
     if (post.rows.length === 0) {
       return next(ApiError.notFound("This post does not exist"));
     }
@@ -130,13 +146,14 @@ export const likeDislike = async (req, res, next) => {
         "DELETE FROM likesdislikes WHERE user_id= $1 AND post_id = $2",
         [user_id, post_id]
       );
-      return res.status(204).json({ data: { status: false } });
+      return res.status(202).json({ data: { status: 2 } });
     }
     const result = await pool.query(
       "INSERT INTO likesdislikes (post_id, user_id, value) VALUES ($1, $2 ,$3) ON CONFLICT (post_id, user_id) DO UPDATE SET value = EXCLUDED.value RETURNING *",
       [post_id, user_id, action]
     );
-    res.status(202).json({ data: { status: result.rows[0].value } });
+
+    res.status(202).json({ data: { status: +result.rows[0].value } });
   } catch (err) {
     console.log(err.message);
   }
@@ -151,9 +168,9 @@ export const checkLikeDislikeStatus = async (req, res, next) => {
       [user_id, post_id]
     );
     if (result.rows.length === 0) {
-      return res.status(200).json({ data: { status: false } });
+      return res.status(200).json({ data: { status: 2 } });
     }
-    return res.status(200).json({ data: { status: result.rows[0].value } });
+    return res.status(200).json({ data: { status: +result.rows[0].value } });
   } catch (err) {
     console.log(err.message);
   }

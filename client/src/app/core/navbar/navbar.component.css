@@ -3,7 +3,13 @@
   font-size: 0.9rem;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 800px) {
+  .hidden {
+    display: none;
+  }
+  .showing {
+    display: block !important;
+  }
   .logged-as {
     font-size: 0.6rem !important;
   }

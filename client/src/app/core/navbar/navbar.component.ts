@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { UserService } from 'src/app/user-service.service';
 import {
-  faPen,
+  faHamburger,
   faUserPlus,
   faSignOutAlt,
   faSignInAlt,
@@ -15,10 +15,13 @@ import { filter } from 'rxjs/operators';
 })
 export class NavbarComponent implements OnInit {
   currentRoute;
-  faPen = faPen;
+  faHamburger = faHamburger;
   faSignOutAlt = faSignOutAlt;
   faUserPlus = faUserPlus;
   faSignInAlt = faSignInAlt;
+  sideNavShowing = false;
+  @Output()
+  showHideSideNav = new EventEmitter<boolean>();
   constructor(public provider: UserService, private router: Router) {}
 
   ngOnInit(): void {
@@ -27,5 +30,10 @@ export class NavbarComponent implements OnInit {
       .subscribe((event: NavigationEnd) => {
         this.currentRoute = event.url;
       });
+  }
+
+  toggleSideNav() {
+    this.showHideSideNav.emit(!this.sideNavShowing);
+    this.sideNavShowing = !this.sideNavShowing;
   }
 }

@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light">
   <div class="container-fluid">
     <a
       class="navbar-brand"
@@ -18,7 +18,7 @@
     <ul class="navbar-nav d-flex flex-row">
       <li *ngIf="provider.user" class="nav-item">
         <a
-          class="nav-link"
+          class="nav-link hidden"
           [routerLink]="['/signup']"
           routerLinkActive="router-link-active"
           >My memes</a
@@ -54,6 +54,11 @@
           routerLinkActive="router-link-active"
         >
           <fa-icon [icon]="faSignOutAlt"></fa-icon
+        ></a>
+      </li>
+      <li class="nav-item ml-2 d-none showing" (click)="toggleSideNav()">
+        <a class="nav-link" routerLinkActive="router-link-active">
+          <fa-icon [icon]="faHamburger"></fa-icon
         ></a>
       </li>
     </ul>

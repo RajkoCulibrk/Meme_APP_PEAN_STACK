@@ -8,9 +8,15 @@ import { UserService } from './user-service.service';
 })
 export class AppComponent implements OnInit {
   title = 'client';
+  sideNavShowing = false;
 
   constructor(private userService: UserService) {}
   ngOnInit() {
     this.userService.getUser();
+  }
+  toggleSideNav(e) {
+    console.log('kurcina');
+
+    this.sideNavShowing = e;
   }
 }
