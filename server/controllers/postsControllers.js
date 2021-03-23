@@ -28,24 +28,7 @@ export const addPost = async (req, res, next) => {
 
 export const getPosts = async (req, res, next) => {
   try {
-    const posts = await pool.query(`select 
-    p.post_id,p.title,p.image_public_url,p.user_id,p.likes,p.dislikes,u.user_name as author
-    from 
-    (select 
-        p.post_id,p.title,p.image_public_url,p.user_id,
-        COALESCE(l.likes,0) as likes, 
-        COALESCE(l.dislikes,0) as dislikes from posts as p
-      left join (select post_id, 
-             COUNT(value) filter (where value=true) as likes,
-             COUNT(value) filter (where value=false) as dislikes
-             from likesdislikes
-              group by post_id
-            
-            ) as l
-             on p.post_id = l.post_id 
-             order by created_at) as p
-         left join users as u
-         on p.user_id = u.user_id`);
+    const posts = await pool.query(`select * from posts_view`);
     /* console.log(posts); */
     res
       .status(200)
