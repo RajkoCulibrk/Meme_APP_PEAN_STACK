@@ -9,7 +9,7 @@ export class Post {
     this.post_id = (obj && obj.post_id) || null;
     this.title = (obj && obj.title) || null;
     this.image_public_url = (obj && obj.image_public_url) || null;
-    this.likes = (obj && obj.likes) || null;
-    this.dislikes = (obj && obj.dislikes) || null;
+    this.likes = (obj && obj.likes) || 0;
+    this.dislikes = (obj && obj.dislikes) || 0;
   }
 }

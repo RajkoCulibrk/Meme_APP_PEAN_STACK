@@ -10,7 +10,9 @@
       <fa-icon [icon]="faSignOutAlt"></fa-icon>Logout
     </div>
     <div class="side-nav-item">
-      <fa-icon [icon]="faPlus"></fa-icon> Post a meme
+      <a [routerLink]="['/new']" routerLinkActive="router-link-active">
+        <fa-icon [icon]="faPlus"></fa-icon> Post a meme
+      </a>
     </div>
   </div>
 </div>

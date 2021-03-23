@@ -14,6 +14,7 @@ import { SinglePostComponent } from './single-post/single-post.component';
 import { TokenItnerceptorService } from './token-itnerceptor.service';
 import { SinglePostPageComponent } from './single-post-page/single-post-page.component';
 import { SideNavComponent } from './core/side-nav/side-nav.component';
+import { AddNewPostComponent } from './add-new-post/add-new-post.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { SideNavComponent } from './core/side-nav/side-nav.component';
     SinglePostComponent,
     SinglePostPageComponent,
     SideNavComponent,
+    AddNewPostComponent,
   ],
   imports: [
     BrowserModule,

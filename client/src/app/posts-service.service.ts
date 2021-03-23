@@ -50,4 +50,12 @@ export class PostsService {
       })
     );
   }
+
+  addNewPost(formData: FormData): Observable<Post> {
+    return this.http.post(this.url, formData).pipe(
+      map((x: { data: { post: Post } }) => {
+        return new Post(x.data.post);
+      })
+    );
+  }
 }
