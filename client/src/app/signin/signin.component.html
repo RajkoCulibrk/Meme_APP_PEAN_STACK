@@ -72,8 +72,9 @@
     >
   </span>
   <div
-    class="text-danger m-auto text-center"
     *ngFor="let error of provider.errors"
+    class="alert alert-danger"
+    role="alert"
   >
     {{ error.message }}
   </div>

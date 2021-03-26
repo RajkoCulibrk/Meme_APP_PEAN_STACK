@@ -34,7 +34,6 @@ export class SinglePostPageComponent implements OnInit {
     this.postsProvider.getSinglePost(this.currentPostId).subscribe(
       (x) => {
         this.post = x;
-        console.log(this.post);
       },
       (e) => {
         console.log(e);

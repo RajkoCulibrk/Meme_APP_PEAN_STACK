@@ -1,5 +1,7 @@
 <div class="card mt-2">
-  <h5 class="card-title">{{ post?.title | titlecase }}</h5>
+  <a [routerLink]="['/post', post.post_id]">
+    <h5 class="card-title">{{ post?.title | titlecase }}</h5>
+  </a>
   <a [routerLink]="['/post', post.post_id]">
     <img
       [src]="post?.image_public_url"
@@ -7,26 +9,39 @@
       [alt]="post?.title"
     />
   </a>
-  <div class="card-body d-flex justify-content-end">
-    <button
-      (click)="likeDislike(true)"
-      class="btn btn-outline-dark d-flex align-items-center"
-    >
-      {{ post?.likes }} &nbsp;
-      <fa-icon
-        [ngClass]="{ 'text-success': liked == 1 }"
-        [icon]="faThumbsUp"
-      ></fa-icon>
-    </button>
-    <button
-      (click)="likeDislike(false)"
-      class="btn btn-outline-dark d-flex align-items-center ml-2"
-    >
-      {{ post?.dislikes }} &nbsp;
-      <fa-icon
-        [ngClass]="{ 'text-danger': liked == 0 }"
-        [icon]="faThumbsDown"
-      ></fa-icon>
-    </button>
+  <div class="card-body d-flex justify-content-between">
+    <div class="post-data">
+      <div class="post_author">Created by : {{ post.author | titlecase }}</div>
+      <div class="post_date">Date : {{ post.created_at | date }}</div>
+    </div>
+    <div class="post_buttons d-flex">
+      <button
+        [routerLink]="['/post', post.post_id]"
+        class="btn btn-outline-dark d-flex align-items-center ml-2"
+      >
+        {{ post?.comments }} &nbsp;
+        <fa-icon [icon]="faComment"></fa-icon>
+      </button>
+      <button
+        (click)="likeDislike(true)"
+        class="btn btn-outline-dark d-flex align-items-center ml-2"
+      >
+        {{ post?.likes }} &nbsp;
+        <fa-icon
+          [ngClass]="{ 'text-success': liked == 1 }"
+          [icon]="faThumbsUp"
+        ></fa-icon>
+      </button>
+      <button
+        (click)="likeDislike(false)"
+        class="btn btn-outline-dark d-flex align-items-center ml-2"
+      >
+        {{ post?.dislikes }} &nbsp;
+        <fa-icon
+          [ngClass]="{ 'text-danger': liked == 0 }"
+          [icon]="faThumbsDown"
+        ></fa-icon>
+      </button>
+    </div>
   </div>
 </div>

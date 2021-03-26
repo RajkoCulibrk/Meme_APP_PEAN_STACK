@@ -5,22 +5,36 @@ import ApiError from "../utility/ApiError.js";
 export const postComment = async (req, res, next) => {
   try {
     const { body, post_id, reply_to } = req.body;
+    console.log(reply_to);
     const user_id = req.user;
     if (reply_to) {
+      console.log("ima reply to");
       const response = await pool.query(
-        "INSERT INTO comments (post_id, user_id, body,reply_to) VALUES ($1 , $2 , $3,$4)  RETURNING *",
+        "INSERT INTO comments (post_id, user_id, body, reply_to) VALUES ($1 , $2 , $3,$4)  RETURNING *",
         [post_id, user_id, body, reply_to]
       );
-      res.status(201).json({ data: response.rows[0] });
+
+      const commentToSendBack = await pool.query(
+        "SELECT * FROM comments_view WHERE comment_id = $1",
+        [response.rows[0].comment_id]
+      );
+
+      res.status(201).json({ data: { comment: commentToSendBack.rows[0] } });
     } else {
       const response = await pool.query(
         "INSERT INTO comments (post_id, user_id, body) VALUES ($1 , $2 , $3)  RETURNING *",
         [post_id, user_id, body]
       );
-      res.status(201).json({ data: response.rows[0] });
+
+      const commentToSendBack = await pool.query(
+        "SELECT * FROM comments_view WHERE comment_id = $1",
+        [response.rows[0].comment_id]
+      );
+
+      res.status(201).json({ data: { comment: commentToSendBack.rows[0] } });
     }
   } catch (err) {
-    console.log(err.message);
+    console.log(err);
     next(ApiError.internal("Error at post comment"));
   }
 };
@@ -34,14 +48,26 @@ export const likeDislikeComment = async (req, res, next) => {
     const comment_id = req.params.id;
     const user_id = req.user;
     const { action } = req.body;
-
-    if (action === "delete") {
+    const exists = await pool.query(
+      "SELECT * FROM commentslikesdislikes WHERE user_id = $1 AND comment_id = $2",
+      [user_id, comment_id]
+    );
+    if (exists.rows.length > 0) {
+      if (exists.rows[0].value == action) {
+        await pool.query(
+          "DELETE FROM commentslikesdislikes WHERE user_id= $1 AND comment_id = $2",
+          [user_id, comment_id]
+        );
+        return res.status(202).json({ data: { status: 2 } });
+      }
+    }
+    /*     if (action === "delete") {
       await pool.query(
         "DELETE FROM commentslikesdislikes WHERE user_id= $1 AND comment_id = $2",
         [user_id, comment_id]
       );
       return res.status(202).json({ data: { status: 2 } });
-    }
+    } */
     const result = await pool.query(
       "INSERT INTO commentslikesdislikes (comment_id, user_id, value) VALUES ($1, $2 ,$3) ON CONFLICT (comment_id, user_id) DO UPDATE SET value = EXCLUDED.value RETURNING *",
       [comment_id, user_id, action]
@@ -50,12 +76,17 @@ export const likeDislikeComment = async (req, res, next) => {
     res.status(202).json({ data: { status: +result.rows[0].value } });
   } catch (err) {
     console.log(err.message);
+    next(ApiError.internal("Internal error"));
   }
 };
 
 export const getComments = async (req, res, next) => {
   try {
-    const result = await pool.query("SELECT * FROM comments_view");
+    const post_id = req.params.id;
+    const result = await pool.query(
+      "SELECT * FROM comments_view WHERE post_id = $1",
+      [post_id]
+    );
     res.status(200).json({ data: { comments: result.rows } });
   } catch (err) {
     console.log(err.message);
@@ -116,5 +147,22 @@ export const deleteComment = async (req, res, next) => {
     next(
       ApiError.internal("Internal server error while trying to delete comment")
     );
+  }
+};
+
+export const checkLikeDislikeStatus = async (req, res, next) => {
+  try {
+    const comment_id = req.params.id;
+    const user_id = req.user;
+    const result = await pool.query(
+      "SELECT * FROM  commentslikesdislikes WHERE user_id = $1 AND comment_id = $2",
+      [user_id, comment_id]
+    );
+    if (result.rows.length === 0) {
+      return res.status(200).json({ data: { status: 2 } });
+    }
+    return res.status(200).json({ data: { status: +result.rows[0].value } });
+  } catch (err) {
+    console.log(err.message);
   }
 };

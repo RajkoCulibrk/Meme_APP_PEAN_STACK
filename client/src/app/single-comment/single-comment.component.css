@@ -1,0 +1,31 @@
+.comment {
+  box-shadow: 4px 4px 14px black;
+  max-width: 600px;
+  margin: auto;
+  border-radius: 0.2rem;
+  background-color: rgb(230, 227, 227);
+}
+
+.comment_reply_to {
+  font-style: italic;
+  font-size: 0.8rem;
+}
+
+.comment_author {
+  font-weight: bold;
+}
+
+@media screen and (max-width: 600px) {
+  .comment_buttons button {
+    padding: 0.2rem;
+  }
+  .comment {
+    min-width: 90vw !important;
+  }
+}
+
+@media screen and (min-width: 600px) {
+  .comment {
+    min-width: 600px;
+  }
+}

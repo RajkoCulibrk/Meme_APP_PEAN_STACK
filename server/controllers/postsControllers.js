@@ -43,27 +43,13 @@ export const getSinglePost = async (req, res, next) => {
   try {
     const post_id = req.params.id;
     const post = await pool.query(
-      `select 
-    p.post_id,p.title,p.image_public_url,
-    COALESCE(l.likes,0) as likes, 
-    COALESCE(l.dislikes,0) as dislikes 
-	
-	from posts  as p
-  left join (select post_id, 
-         COUNT(value) filter (where value=true) as likes,
-         COUNT(value) filter (where value=false) as dislikes
-         from likesdislikes
-			
-          group by post_id
-        
-        ) as l
-         on p.post_id = l.post_id
-		 where p.post_id = $1`,
+      `SELECT * FROM posts_view WHERE post_id = $1`,
       [post_id]
     );
     if (post.rows.length === 0) {
       return next(ApiError.notFound("This post does not exist"));
     }
+
     res.status(200).json({ data: { post: post.rows[0] } });
   } catch (err) {
     console.log(err.message);
@@ -129,14 +115,27 @@ export const likeDislike = async (req, res, next) => {
     const post_id = req.params.id;
     const user_id = req.user;
     const { action } = req.body;
+    const exists = await pool.query(
+      "SELECT * FROM likesdislikes WHERE user_id = $1 AND post_id = $2",
+      [user_id, post_id]
+    );
+    if (exists.rows.length > 0) {
+      if (exists.rows[0].value == action) {
+        await pool.query(
+          "DELETE FROM likesdislikes WHERE user_id= $1 AND post_id = $2",
+          [user_id, post_id]
+        );
+        return res.status(202).json({ data: { status: 2 } });
+      }
+    }
 
-    if (action === "delete") {
+    /*   if (action === "delete") {
       await pool.query(
         "DELETE FROM likesdislikes WHERE user_id= $1 AND post_id = $2",
         [user_id, post_id]
       );
       return res.status(202).json({ data: { status: 2 } });
-    }
+    } */
     const result = await pool.query(
       "INSERT INTO likesdislikes (post_id, user_id, value) VALUES ($1, $2 ,$3) ON CONFLICT (post_id, user_id) DO UPDATE SET value = EXCLUDED.value RETURNING *",
       [post_id, user_id, action]
@@ -144,6 +143,7 @@ export const likeDislike = async (req, res, next) => {
 
     res.status(202).json({ data: { status: +result.rows[0].value } });
   } catch (err) {
+    next(ApiError.internal("Internal error"));
     console.log(err.message);
   }
 };

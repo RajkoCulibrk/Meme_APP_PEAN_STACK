@@ -11,14 +11,16 @@ import {
   getSingleComment,
   getSubcomments,
   likeDislikeComment,
-  postComment
+  postComment,
+  checkLikeDislikeStatus
 } from "../controllers/commentsControllers.js";
 
 router.post("/", [authorize], postComment);
-router.get("/", getComments);
+router.get("/post/:id", getComments);
 router.get("/:id", getSingleComment);
 router.delete("/:id", [authorize], deleteComment);
 router.get("/subcomments/:id", getSubcomments);
 router.post("/likedislike/:id", [authorize], likeDislikeComment);
+router.get("/likedislike/:id", [authorize], checkLikeDislikeStatus);
 
 export default router;

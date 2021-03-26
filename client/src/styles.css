@@ -18,8 +18,7 @@ form.sign {
 }
 
 body {
-  /*  background-image: url("./assets/backgound.jpg"); */
-  /*   background-size: cover; */
+  background: rgb(230, 230, 230) !important;
 }
 
 @media screen and (max-width: 600px) {

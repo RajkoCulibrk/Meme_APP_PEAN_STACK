@@ -1,0 +1,16 @@
+<div class="container-fluid p-0">
+  <form (ngSubmit)="postComment()" #form="ngForm" class="input-group mb-3">
+    <input
+      placeholder="Post comment"
+      type="text"
+      [(ngModel)]="body"
+      name="body"
+      class="form-control"
+    />
+    <div class="input-group-append">
+      <button class="btn btn-primary" id="button-addon2">
+        <fa-icon [icon]="faPaperPlane"></fa-icon>
+      </button>
+    </div>
+  </form>
+</div>

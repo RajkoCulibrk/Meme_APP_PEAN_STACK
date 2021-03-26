@@ -1,7 +1,15 @@
-<div class="container">
-  <app-single-post
-    *ngIf="post"
-    class="d-flex justify-content-center"
-    [post]="post"
-  ></app-single-post>
+<div class="d-flex flex-column justify-content-center align-items-center">
+  <div class="container">
+    <app-single-post
+      *ngIf="post"
+      class="d-flex justify-content-center mt-5"
+      [post]="post"
+    ></app-single-post>
+  </div>
+  <div class="post-comment mt-2">
+    <app-post-comment [postId]="currentPostId"></app-post-comment>
+  </div>
+  <div class="container-fluid comments-list">
+    <app-comments class="w-100" [postId]="currentPostId"></app-comments>
+  </div>
 </div>

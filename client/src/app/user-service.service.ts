@@ -71,11 +71,6 @@ export class UserService {
     }, 3000);
   }
   getUser(): void {
-    /*   const token = localStorage.getItem('token');
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    }); */
     this.http
       .get<{ data: { user: User } }>(
         this.url + '/user' /* , { headers: headers } */

@@ -1,0 +1,55 @@
+<div class="comment p-2">
+  <div class="comment_header d-flex justify-content-between">
+    <div class="div">
+      <span class="comment_author">{{ comment.user_name | titlecase }}</span>
+      <span *ngIf="comment.parrent_comment_author" class="comment_reply_to ml-3"
+        >in reply to: {{ comment.parrent_comment_author | titlecase }}</span
+      >
+    </div>
+    <span class="comment_date font-italic">{{
+      comment.created_at | date
+    }}</span>
+  </div>
+  <div class="comment_body lead p-1">
+    {{ comment.body | titlecase }}
+  </div>
+  <div class="comment_footer d-flex flex-column justify-content-end">
+    <div class="comment_buttons d-flex ml-auto mb-2">
+      <button
+        (click)="deleteComment()"
+        *ngIf="comment.user_id == userService.user?.user_id"
+        class="btn btn-outline-dark d-flex align-items-center ml-2 text-danger"
+      >
+        <fa-icon [icon]="faTrash"></fa-icon>
+      </button>
+      <button class="btn btn-outline-dark d-flex align-items-center ml-2">
+        {{ comment.subcomments }} &nbsp;
+        <fa-icon [icon]="faComment"></fa-icon>
+      </button>
+      <button
+        (click)="likeDislike(true)"
+        class="btn btn-outline-dark d-flex align-items-center ml-2"
+      >
+        {{ comment?.likes }} &nbsp;
+        <fa-icon
+          [ngClass]="{ 'text-success': liked == 1 }"
+          [icon]="faThumbsUp"
+        ></fa-icon>
+      </button>
+      <button
+        (click)="likeDislike(false)"
+        class="btn btn-outline-dark d-flex align-items-center ml-2"
+      >
+        {{ comment?.dislikes }} &nbsp;
+        <fa-icon
+          [ngClass]="{ 'text-danger': liked == 0 }"
+          [icon]="faThumbsDown"
+        ></fa-icon>
+      </button>
+    </div>
+    <app-post-comment
+      [comment]="comment"
+      [postId]="comment.post_id"
+    ></app-post-comment>
+  </div>
+</div>

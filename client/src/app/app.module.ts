@@ -15,6 +15,11 @@ import { TokenItnerceptorService } from './token-itnerceptor.service';
 import { SinglePostPageComponent } from './single-post-page/single-post-page.component';
 import { SideNavComponent } from './core/side-nav/side-nav.component';
 import { AddNewPostComponent } from './add-new-post/add-new-post.component';
+import { CommentsComponent } from './comments/comments.component';
+import { SingleCommentComponent } from './single-comment/single-comment.component';
+import { PostCommentComponent } from './post-comment/post-comment.component';
+
+import { SingleCommentPreviewComponent } from './single-comment-preview/single-comment-preview.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +32,11 @@ import { AddNewPostComponent } from './add-new-post/add-new-post.component';
     SinglePostPageComponent,
     SideNavComponent,
     AddNewPostComponent,
+    CommentsComponent,
+    SingleCommentComponent,
+    PostCommentComponent,
+
+    SingleCommentPreviewComponent,
   ],
   imports: [
     BrowserModule,

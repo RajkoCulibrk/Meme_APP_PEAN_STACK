@@ -1,0 +1,28 @@
+.post-comment {
+  max-width: 50% !important;
+}
+
+.xxx {
+  width: 100%;
+}
+
+.comments-list {
+  max-width: 50% !important;
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0;
+}
+
+@media screen and (min-width: 600px) {
+  .post-comment,
+  .comments-list {
+    min-width: 600px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .post-comment,
+  .comments-list {
+    min-width: 90%;
+  }
+}

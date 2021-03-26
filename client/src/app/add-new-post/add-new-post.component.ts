@@ -5,9 +5,11 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { Router } from '@angular/router';
 import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 import { Post } from '../models/Post';
 import { PostsService } from '../posts-service.service';
+import { UserService } from '../user-service.service';
 @Component({
   selector: 'app-add-new-post',
   templateUrl: './add-new-post.component.html',
@@ -18,7 +20,12 @@ export class AddNewPostComponent implements OnInit {
   faThumbsDown = faThumbsDown;
   src: any = '../../assets/placeholder.jpg';
   form: FormGroup;
-  constructor(private fb: FormBuilder, private postsService: PostsService) {}
+  constructor(
+    private fb: FormBuilder,
+    private postsService: PostsService,
+    private userService: UserService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.initializeForm();
@@ -49,6 +56,11 @@ export class AddNewPostComponent implements OnInit {
   }
 
   submitForm(event) {
+    if (!this.userService.user) {
+      this.userService.setError('Please sign in first!');
+      this.router.navigateByUrl('/signin');
+      return;
+    }
     event.preventDefault();
     let formData = new FormData();
     formData.append('title', this.form.get('title').value);

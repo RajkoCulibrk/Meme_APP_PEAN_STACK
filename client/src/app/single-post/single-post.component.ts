@@ -1,6 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Post } from '../models/Post';
-import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
+import {
+  faThumbsUp,
+  faThumbsDown,
+  faComment,
+} from '@fortawesome/free-solid-svg-icons';
 import { UserService } from '../user-service.service';
 import { Router } from '@angular/router';
 import { PostsService } from '../posts-service.service';
@@ -15,6 +19,7 @@ export class SinglePostComponent implements OnInit {
   liked: number;
   faThumbsUp = faThumbsUp;
   faThumbsDown = faThumbsDown;
+  faComment = faComment;
   constructor(
     private userService: UserService,
     private postsService: PostsService,
@@ -29,21 +34,40 @@ export class SinglePostComponent implements OnInit {
 
   likeDislike(action) {
     if (!this.userService.user) {
+      this.userService.setError('Please sign in first!');
       this.router.navigateByUrl('/signin');
       return;
     }
-    if (this.liked == action) {
-      action = 'delete';
-    }
+
     this.postsService.likeDislikePost(this.post.post_id, action).subscribe(
       (x) => {
+        if (this.liked == 2 && action) {
+          this.post.likes++;
+        }
+        if (this.liked == 2 && !action) {
+          this.post.dislikes++;
+        }
+        if (this.liked == 1 && action) {
+          this.post.likes--;
+        }
+        if (this.liked == 0 && !action) {
+          this.post.dislikes--;
+        }
+        if (this.liked == 0 && action) {
+          this.post.likes++;
+          this.post.dislikes--;
+        }
+        if (this.liked == 1 && !action) {
+          this.post.likes--;
+          this.post.dislikes++;
+        }
+
         this.liked = x;
       },
       (e) => {
         console.log(e);
       }
     );
-    console.log('logovan si', action);
   }
 
   checkLikeDislike(id) {
