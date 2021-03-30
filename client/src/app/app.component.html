@@ -1,3 +1,9 @@
-<app-navbar (showHideSideNav)="toggleSideNav($event)"></app-navbar>
-<app-side-nav [showing]="sideNavShowing"></app-side-nav>
+<app-navbar
+  [sideNavShowing]="sideNavShowing"
+  (showHideSideNav)="toggleSideNav($event)"
+></app-navbar>
+<app-side-nav
+  (closeEvent)="toggleSideNav($event)"
+  [showing]="sideNavShowing"
+></app-side-nav>
 <router-outlet></router-outlet>

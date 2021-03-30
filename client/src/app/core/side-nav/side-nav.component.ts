@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   faHeart,
   faUserAlt,
@@ -18,7 +18,13 @@ export class SideNavComponent implements OnInit {
   faPlus = faPlus;
   @Input()
   showing: boolean;
+  @Output()
+  closeEvent = new EventEmitter();
   constructor(public userProvider: UserService) {}
 
   ngOnInit(): void {}
+
+  close() {
+    this.closeEvent.emit(false);
+  }
 }

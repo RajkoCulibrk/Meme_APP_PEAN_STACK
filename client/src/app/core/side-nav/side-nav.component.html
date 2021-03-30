@@ -1,18 +1,6 @@
-<div [ngClass]="{ show: showing }" class="side-nav">
+<div (click)="close()" [ngClass]="{ show: showing }" class="side-nav">
   <div class="content">
-    <div *ngIf="userProvider.user" class="side-nav-item">
-      <fa-icon [icon]="faUserAlt"></fa-icon> My Memes
-    </div>
-    <div *ngIf="userProvider.user" class="side-nav-item">
-      <fa-icon [icon]="faHeart"></fa-icon> Memes I Like
-    </div>
-    <div *ngIf="userProvider.user" class="side-nav-item">
-      <fa-icon [icon]="faSignOutAlt"></fa-icon>Logout
-    </div>
-    <div class="side-nav-item">
-      <a [routerLink]="['/new']" routerLinkActive="router-link-active">
-        <fa-icon [icon]="faPlus"></fa-icon> Post a meme
-      </a>
-    </div>
+    <app-side-nav-content></app-side-nav-content>
+    <div class="experiment"></div>
   </div>
 </div>

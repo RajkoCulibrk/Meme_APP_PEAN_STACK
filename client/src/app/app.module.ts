@@ -20,6 +20,7 @@ import { SingleCommentComponent } from './single-comment/single-comment.componen
 import { PostCommentComponent } from './post-comment/post-comment.component';
 
 import { SingleCommentPreviewComponent } from './single-comment-preview/single-comment-preview.component';
+import { SideNavContentComponent } from './core/side-nav-content/side-nav-content.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,8 @@ import { SingleCommentPreviewComponent } from './single-comment-preview/single-c
     PostCommentComponent,
 
     SingleCommentPreviewComponent,
+
+    SideNavContentComponent,
   ],
   imports: [
     BrowserModule,

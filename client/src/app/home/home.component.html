@@ -1,8 +1,38 @@
-<h3 class="text-center">All Posts</h3>
-<div class="container">
-  <app-single-post
-    class="d-flex justify-content-center"
-    *ngFor="let post of posts"
-    [post]="post"
-  ></app-single-post>
+<div class="d-flex justify-content-center">
+  <div class="side">
+    <div class="lll">
+      <app-side-nav-content></app-side-nav-content>
+      <div class="experiment"></div>
+    </div>
+  </div>
+  <div class="main mt-4">
+    <app-single-post
+      class="d-flex justify-content-center"
+      *ngFor="let post of provider.posts"
+      [post]="post"
+    ></app-single-post>
+    <!-- spinner -->
+    <div
+      *ngIf="provider.loadingPosts"
+      class="spinner-border spinner text-primary"
+      role="status"
+    >
+      <span class="sr-only">Loading...</span>
+    </div>
+    <!-- no more content -->
+    <div
+      *ngIf="provider.noContent"
+      class="alert alert-primary mt-5 d-flex justify-content-center align-items-center"
+      role="alert"
+    >
+      No more content !
+      <img
+        class="ml-1"
+        width="100px"
+        src="../../assets/nocontent.png"
+        alt="no content"
+      />
+    </div>
+  </div>
+  <div class="side"></div>
 </div>

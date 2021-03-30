@@ -5,6 +5,7 @@ import {
   faThumbsDown,
   faComment,
   faTrash,
+  faReply,
 } from '@fortawesome/free-solid-svg-icons';
 import { CommentsService } from '../comments.service';
 import { UserService } from '../user-service.service';
@@ -17,11 +18,15 @@ import { Router } from '@angular/router';
 export class SingleCommentComponent implements OnInit {
   @Input()
   comment: Comment;
+  @Input()
+  partOfPreviewComponent: boolean;
   liked: number;
   faThumbsUp = faThumbsUp;
   faThumbsDown = faThumbsDown;
   faComment = faComment;
   faTrash = faTrash;
+  faReply = faReply;
+  showReply = false;
   constructor(
     private commentsProvider: CommentsService,
     public userService: UserService,
@@ -84,7 +89,14 @@ export class SingleCommentComponent implements OnInit {
       );
   }
 
+  setShowReply() {
+    this.showReply = !this.showReply;
+  }
+
   deleteComment() {
-    this.commentsProvider.deleteComment(this.comment.comment_id);
+    this.commentsProvider.deleteComment(
+      this.comment.comment_id,
+      this.partOfPreviewComponent
+    );
   }
 }

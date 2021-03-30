@@ -1,6 +1,11 @@
 <div class="container">
-  <form [formGroup]="form" (ngSubmit)="submitForm($event)">
-    <div class="form-group">
+  <h4 class="text-center">Upload your meme</h4>
+  <form
+    [formGroup]="form"
+    class="d-flex flex-column align-items-center"
+    (ngSubmit)="submitForm($event)"
+  >
+    <div class="form-group w-100">
       <label for="exampleInputEmail1">Title</label>
       <input
         formControlName="title"
@@ -36,8 +41,8 @@
       *ngIf="
         form.get('image').hasError('required') && form.get('image').touched
       "
-      >Please pick an image </small
-    ><br />
+      >Please pick an image
+    </small>
 
     <button [disabled]="!form.valid" type="submit" class="btn btn-primary">
       Submit

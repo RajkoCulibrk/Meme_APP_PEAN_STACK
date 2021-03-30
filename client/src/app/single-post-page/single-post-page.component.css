@@ -8,8 +8,9 @@
 
 .comments-list {
   max-width: 50% !important;
-  margin-left: 0;
-  margin-right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 0;
 }
 

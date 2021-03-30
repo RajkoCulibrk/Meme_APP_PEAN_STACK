@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AddNewPostComponent } from './add-new-post/add-new-post.component';
+import { CommentsComponent } from './comments/comments.component';
+
 import { HomeComponent } from './home/home.component';
 import { SigninComponent } from './signin/signin.component';
 import { SignupComponent } from './signup/signup.component';
@@ -14,6 +16,7 @@ const routes: Routes = [
     path: 'post/:id',
     component: SinglePostPageComponent,
     children: [
+      { path: '', component: CommentsComponent },
       { path: 'comment/:id', component: SingleCommentPreviewComponent },
     ],
   },

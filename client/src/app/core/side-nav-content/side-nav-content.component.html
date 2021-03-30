@@ -1,0 +1,52 @@
+<div class="content">
+  <img src="../../../assets/jao.png" alt="jao" />
+  <div *ngIf="userProvider.user" class="side-nav-item">
+    <fa-icon class="mr-2" [icon]="faUserAlt"></fa-icon> My Memes
+  </div>
+  <div *ngIf="userProvider.user" class="side-nav-item">
+    <fa-icon class="mr-2" [icon]="faHeart"></fa-icon> Memes I Like
+  </div>
+
+  <div class="side-nav-item">
+    <a [routerLink]="['/new']" routerLinkActive="router-link-active">
+      <fa-icon class="mr-2" [icon]="faPlus"></fa-icon>
+      Post a meme
+    </a>
+  </div>
+  <div (click)="logout()" *ngIf="userProvider.user" class="side-nav-item">
+    <fa-icon class="mr-2" [icon]="faSignOutAlt"></fa-icon> Logout
+  </div>
+  <div (click)="preventPropagation($event)" class="pagination-params">
+    <div class="form-group">
+      <label for="exampleFormControlSelect1">Sort By</label>
+      <select
+        (change)="setOrderBy($event)"
+        [value]="postsProvider.order_by"
+        class="form-control"
+        id="exampleFormControlSelect1"
+      >
+        <option value="created_at">Date</option>
+        <option value="likes">Likes</option>
+        <option value="dislikes">Dislikes</option>
+        <option value="comments">Comments</option>
+      </select>
+
+      <label for="exampleFormControlSelect1">Sort Order</label>
+      <select
+        (change)="setOrder($event)"
+        class="form-control"
+        id="exampleFormControlSelect1"
+      >
+        <option value="2">Descending</option>
+        <option value="1">Ascending</option>
+      </select>
+    </div>
+  </div>
+  <div
+    *ngIf="userProvider.user"
+    (click)="preventPropagation($event)"
+    class="pagination-params"
+  >
+    Logged in as {{ userProvider.user.user_name | titlecase }}
+  </div>
+</div>

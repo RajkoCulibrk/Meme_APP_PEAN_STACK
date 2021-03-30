@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { User } from './models/User';
 import { map, filter } from 'rxjs/operators';
 import { Token } from './models/Token';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,7 @@ export class UserService {
   user: User = null;
   token: string = null;
   errors: { id: number; message: string }[] = [];
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   register(credentials): void {
     this.http
@@ -50,6 +51,7 @@ export class UserService {
           this.token = x;
           localStorage.setItem('token', this.token);
           this.getUser();
+          this.router.navigateByUrl('/');
           console.log(x);
         },
         (e) => {
@@ -72,9 +74,7 @@ export class UserService {
   }
   getUser(): void {
     this.http
-      .get<{ data: { user: User } }>(
-        this.url + '/user' /* , { headers: headers } */
-      )
+      .get<{ data: { user: User } }>(this.url + '/user')
       .pipe(
         map((x) => {
           return x;

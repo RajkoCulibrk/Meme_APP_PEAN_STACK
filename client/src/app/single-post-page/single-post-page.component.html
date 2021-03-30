@@ -10,6 +10,6 @@
     <app-post-comment [postId]="currentPostId"></app-post-comment>
   </div>
   <div class="container-fluid comments-list">
-    <app-comments class="w-100" [postId]="currentPostId"></app-comments>
+    <router-outlet></router-outlet>
   </div>
 </div>

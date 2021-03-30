@@ -1,1 +1,28 @@
-<p>single-comment-preview works!</p>
+<div class="container-fluid d-flex flex-column align-content-center">
+  <div
+    *ngIf="loadingComment"
+    style="width: 100px; height: 100px"
+    class="spinner-border text-primary"
+    role="status"
+  >
+    <span class="sr-only">Loading...</span>
+  </div>
+  <div *ngIf="error" class="alert alert-warning" role="alert">
+    {{ error }}
+    <a (click)="goBack()" class="alert-link"> go back .</a>
+  </div>
+
+  <app-single-comment
+    *ngIf="comment && commentsService.singleCommentExists"
+    [comment]="comment"
+    [partOfPreviewComponent]="true"
+  ></app-single-comment>
+  <h4 *ngIf="commentsService.subcomments.length" class="text-center m-2">
+    Replies
+  </h4>
+  <app-single-comment
+    class="mt-2"
+    *ngFor="let comment of commentsService.subcomments"
+    [comment]="comment"
+  ></app-single-comment>
+</div>

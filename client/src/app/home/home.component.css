@@ -1,0 +1,94 @@
+.container {
+  margin-top: 70px;
+}
+.side {
+  width: 33.33%;
+}
+
+.lll {
+  position: fixed;
+  background-color: rgba(82, 82, 82, 0.377);
+
+  width: 230px;
+  height: 100vh;
+  box-shadow: 10px 0 5px -2px #888;
+}
+
+.experiment {
+  position: absolute;
+  z-index: -1000;
+  background: url("../../assets/vT04jS.png");
+  opacity: 0.2;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.spinner {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  margin-top: 400px;
+  width: 200px;
+  height: 200px;
+}
+
+@media screen and (min-width: 1000px) {
+  .main {
+    width: 33.33%;
+  }
+  .lll {
+    width: 180px;
+  }
+}
+
+@media screen and (min-width: 1150px) {
+  .lll {
+    width: 260px;
+  }
+}
+
+@media screen and (min-width: 1400px) {
+  .lll {
+    width: 400px;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .main {
+    width: 100% !important;
+  }
+  .side {
+    display: none;
+  }
+}
+
+.content {
+  position: fixed;
+  background-color: rgba(131, 139, 153, 0.5);
+  height: 100%;
+  width: 200px;
+}
+
+.side-nav-item {
+  background-color: rgb(224, 220, 220);
+  font-weight: bold;
+  padding: 0.2rem;
+  color: rgb(100, 100, 100);
+  margin-top: 0.2rem;
+}
+.side-nav-item:first-of-type {
+  margin-top: 70px;
+}
+.side-nav-item a {
+  color: rgb(100, 100, 100);
+}
+
+.side-nav-item:hover {
+  background-color: rgb(190, 187, 187);
+}
+
+.show {
+  transform: translateX(0%);
+}

@@ -1,9 +1,13 @@
 .card {
   max-width: 50%;
-
+  box-shadow: 4px 4px 10px black;
   justify-content: center;
 }
 
+h5 {
+  color: black;
+  padding: 0rem 0.5rem;
+}
 @media screen and (min-width: 600px) {
   .card {
     min-width: 600px;
@@ -21,10 +25,5 @@
 
   .post_buttons button {
     padding: 0.2rem !important;
-  }
-
-  h5 {
-    color: black;
-    padding: 0rem 0.5rem;
   }
 }

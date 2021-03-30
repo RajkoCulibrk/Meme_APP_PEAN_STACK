@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -10,14 +10,47 @@ import { PostsList } from './models/PostsList';
 })
 export class PostsService {
   url: string = 'http://localhost:3000/api/posts/';
+  page = 1;
+  order_by = 'created_at';
+  order = 2;
+  like = '';
+  posts: Post[] = [];
+  loadingPosts: boolean = false;
+  noContent = false;
   constructor(private http: HttpClient) {}
 
-  getPosts(): Observable<PostsList> {
-    return this.http.get<{ data: { posts: Post } }>(this.url).pipe(
-      map((x) => {
-        return new PostsList(x.data);
-      })
-    );
+  getPosts() {
+    this.loadingPosts = true;
+    let params = new HttpParams()
+      .set('page', this.page.toString())
+      .set('order_by', this.order_by)
+      .set('order', this.order.toString())
+      .set('like', this.like);
+
+    this.http
+      .get<{ data: { posts: Post } }>(this.url, { params: params })
+      .pipe(
+        map((x) => {
+          return new PostsList(x.data);
+        })
+      )
+      .subscribe(
+        (x) => {
+          if (!x.posts.length) {
+            this.noContent = true;
+          } else {
+            this.noContent = false;
+          }
+          x.posts.forEach((p) => {
+            this.posts.push(p);
+          });
+          this.loadingPosts = false;
+        },
+        (e) => {
+          this.loadingPosts = false;
+          console.log(e);
+        }
+      );
   }
 
   getSinglePost(id): Observable<Post> {

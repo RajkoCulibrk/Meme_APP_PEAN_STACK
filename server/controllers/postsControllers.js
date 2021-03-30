@@ -28,11 +28,35 @@ export const addPost = async (req, res, next) => {
 
 export const getPosts = async (req, res, next) => {
   try {
-    const posts = await pool.query(`select * from posts_view`);
-    /* console.log(posts); */
-    res
-      .status(200)
-      .json({ data: { /* count: posts.rowCount, */ posts: posts.rows } });
+    let { page, order_by, order, like } = req.query;
+    if (!like) {
+      like = "";
+    }
+    const per_page = 2;
+    let offset = 0;
+
+    let o;
+
+    if (order == 1) {
+      o = "asc";
+    }
+    if (order == 2) {
+      o = "desc";
+    }
+    let approved = ["comments", "likes", "dislikes", "created_at"];
+    if (!approved.includes(order_by)) {
+      return next(ApiError.badRequest("Bad order by parameter"));
+    }
+    if (page > 1) {
+      console.log(toString(order_by));
+      offset = per_page * (page - 1);
+    }
+    const posts = await pool.query(
+      `SELECT * FROM posts_view where LOWER (title) like LOWER ($1)  ORDER BY  ${order_by} ${o} OFFSET $2 LIMIT 2`,
+      [`%${like}%`, offset]
+    );
+    console.log(page, order_by, order);
+    res.status(200).json({ data: { posts: posts.rows } });
   } catch (err) {
     console.log(err.message);
     next(ApiError.internal(err.message));

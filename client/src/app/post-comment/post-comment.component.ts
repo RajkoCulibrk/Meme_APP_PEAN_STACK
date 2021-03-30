@@ -33,15 +33,11 @@ export class PostCommentComponent implements OnInit {
       this.router.navigateByUrl('/signin');
       return;
     }
-    this.commentsProvider
-      .postComment(this.body, this.postId, this.comment?.comment_id)
-      .subscribe(
-        (x) => {
-          this.commentsProvider.comments.unshift(x);
-        },
-        (e) => {
-          console.log(e);
-        }
-      );
+    this.commentsProvider.postComment(
+      this.body,
+      this.postId,
+      this.comment?.comment_id
+    );
+    this.body = '';
   }
 }

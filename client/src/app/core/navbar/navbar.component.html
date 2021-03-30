@@ -6,24 +6,40 @@
       routerLinkActive="router-link-active"
       >Meme app
     </a>
-    <div
-      *ngIf="provider.user"
-      class="logged-as d-flex flex-column ml-auto mr-2"
-    >
-      <span>Logged in as : </span>
 
-      <span>{{ provider.user?.user_name | titlecase }}</span>
+    <!-- search -->
+    <div *ngIf="showSearch" class="input-group search">
+      <input
+        type="text"
+        #myDiv
+        [value]="postsProvider.like"
+        (keyup)="search($event)"
+        class="form-control search-input"
+        placeholder="Search"
+        aria-label="Recipient's username"
+        aria-describedby="button-addon2"
+      />
+
+      <button
+        class="close-btn"
+        type="button"
+        id="button-addon2"
+        (click)="toggleSearch()"
+      >
+        <fa-icon class="close-search" [icon]="faWindowClose"></fa-icon>
+      </button>
     </div>
+    <!-- search -->
+    <ul class="navbar-nav d-flex flex-row align-items-center">
+      <!-- magnifying glass -->
+      <fa-icon
+        class="mr-2"
+        *ngIf="!showSearch && currentRoute == '/'"
+        (click)="toggleSearch()"
+        [icon]="faSearch"
+      ></fa-icon>
+      <!-- magnifying glass -->
 
-    <ul class="navbar-nav d-flex flex-row">
-      <li *ngIf="provider.user" class="nav-item">
-        <a
-          class="nav-link hidden"
-          [routerLink]="['/signup']"
-          routerLinkActive="router-link-active"
-          >My memes</a
-        >
-      </li>
       <li *ngIf="!provider.user && currentRoute == '/signin'" class="nav-item">
         <a
           class="nav-link"
@@ -43,19 +59,7 @@
           >Login <fa-icon [icon]="faSignInAlt"></fa-icon
         ></a>
       </li>
-      <li
-        (click)="provider.logout()"
-        *ngIf="provider.user"
-        class="nav-item ml-2"
-      >
-        <a
-          class="nav-link"
-          [routerLink]="['/signin']"
-          routerLinkActive="router-link-active"
-        >
-          <fa-icon [icon]="faSignOutAlt"></fa-icon
-        ></a>
-      </li>
+
       <li class="nav-item ml-2 d-none showing" (click)="toggleSideNav()">
         <a class="nav-link" routerLinkActive="router-link-active">
           <fa-icon [icon]="faHamburger"></fa-icon

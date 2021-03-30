@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs/operators';
+import { CommentsService } from '../comments.service';
 import { Post } from '../models/Post';
 import { PostsService } from '../posts-service.service';
 
@@ -15,7 +16,8 @@ export class SinglePostPageComponent implements OnInit {
 
   constructor(
     private postsProvider: PostsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public commentsProvider: CommentsService
   ) {}
 
   ngOnInit(): void {

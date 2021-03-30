@@ -12,6 +12,10 @@ form.sign {
   max-width: 50%;
 }
 
+.sign {
+  margin-top: 100px !important;
+}
+
 .error-message {
   color: red;
   font-weight: bold;

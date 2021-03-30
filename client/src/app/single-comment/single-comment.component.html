@@ -2,15 +2,23 @@
   <div class="comment_header d-flex justify-content-between">
     <div class="div">
       <span class="comment_author">{{ comment.user_name | titlecase }}</span>
-      <span *ngIf="comment.parrent_comment_author" class="comment_reply_to ml-3"
-        >in reply to: {{ comment.parrent_comment_author | titlecase }}</span
+      <a
+        [routerLink]="['/post', comment.post_id, 'comment', comment.reply_to]"
+        routerLinkActive="router-link-active"
+        *ngIf="comment.parrent_comment_author"
+        class="comment_reply_to ml-3"
+        >in reply to: {{ comment.parrent_comment_author | titlecase }} 's
+        comment</a
       >
     </div>
     <span class="comment_date font-italic">{{
       comment.created_at | date
     }}</span>
   </div>
-  <div class="comment_body lead p-1">
+  <div
+    [routerLink]="['/post', comment.post_id, 'comment', comment.comment_id]"
+    class="comment_body lead p-1"
+  >
     {{ comment.body | titlecase }}
   </div>
   <div class="comment_footer d-flex flex-column justify-content-end">
@@ -22,7 +30,16 @@
       >
         <fa-icon [icon]="faTrash"></fa-icon>
       </button>
-      <button class="btn btn-outline-dark d-flex align-items-center ml-2">
+      <button
+        (click)="setShowReply()"
+        class="btn btn-outline-dark d-flex align-items-center ml-2"
+      >
+        <fa-icon [icon]="faReply"></fa-icon>
+      </button>
+      <button
+        [routerLink]="['/post', comment.post_id, 'comment', comment.comment_id]"
+        class="btn btn-outline-dark d-flex align-items-center ml-2"
+      >
         {{ comment.subcomments }} &nbsp;
         <fa-icon [icon]="faComment"></fa-icon>
       </button>
@@ -48,6 +65,7 @@
       </button>
     </div>
     <app-post-comment
+      *ngIf="showReply"
       [comment]="comment"
       [postId]="comment.post_id"
     ></app-post-comment>

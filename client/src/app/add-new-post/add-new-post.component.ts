@@ -67,7 +67,7 @@ export class AddNewPostComponent implements OnInit {
     formData.append('image', this.form.get('image').value);
     this.postsService.addNewPost(formData).subscribe(
       (x) => {
-        console.log(x);
+        this.postsService.posts.unshift(x);
       },
       (e) => {
         console.log(e);
