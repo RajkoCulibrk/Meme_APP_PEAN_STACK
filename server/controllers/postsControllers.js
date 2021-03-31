@@ -52,7 +52,7 @@ export const getPosts = async (req, res, next) => {
     }
 
     const posts = await pool.query(
-      `SELECT * FROM posts_view where LOWER (title) like LOWER ($1)  ORDER BY  ${order_by} ${o} OFFSET $2 LIMIT 2`,
+      `SELECT * FROM posts_view where LOWER (title) like LOWER ($1)  ORDER BY  ${order_by} ${o} OFFSET $2 LIMIT 3`,
       [`%${like}%`, offset]
     );
 

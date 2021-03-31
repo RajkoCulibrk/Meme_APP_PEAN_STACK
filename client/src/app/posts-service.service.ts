@@ -10,7 +10,7 @@ import { PostsList } from './models/PostsList';
   providedIn: 'root',
 })
 export class PostsService {
-  url: string = 'https://rajko-meme-app.herokuapp.com/api/posts/';
+  url: string = 'http://localhost:3000/api/posts/';
   page = 1;
   order_by = 'created_at';
   order = 2;
@@ -23,6 +23,8 @@ export class PostsService {
   constructor(private http: HttpClient) {}
 
   getPosts() {
+    console.log(this.page);
+
     this.loadingPosts = true;
     let params = new HttpParams()
       .set('page', this.page.toString())
