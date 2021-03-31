@@ -39,7 +39,7 @@ export class UserService {
   }
   login(credentials) {
     return this.http
-      .post<Token>(this.url + 'login', credentials)
+      .post<Token>(this.url + '/login', credentials)
       .pipe(
         map((x) => {
           return x.data.token;
