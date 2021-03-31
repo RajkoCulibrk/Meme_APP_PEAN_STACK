@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class UserService {
-  url: string = 'https://rajko-meme-app.herokuapp.com';
+  url: string = 'https://rajko-meme-app.herokuapp.com/api/auth/';
   user: User = null;
   token: string = null;
   errors: { id: number; message: string }[] = [];
@@ -17,7 +17,7 @@ export class UserService {
 
   register(credentials): void {
     this.http
-      .post<Token>(this.url + '/register', credentials)
+      .post<Token>(this.url + 'register', credentials)
       .pipe(
         map((x) => {
           return x;
@@ -39,7 +39,7 @@ export class UserService {
   }
   login(credentials) {
     return this.http
-      .post<Token>(this.url + '/login', credentials)
+      .post<Token>(this.url + 'login', credentials)
       .pipe(
         map((x) => {
           return x.data.token;
