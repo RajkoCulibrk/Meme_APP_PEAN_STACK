@@ -409,7 +409,7 @@ class UserService {
     constructor(http, router) {
         this.http = http;
         this.router = router;
-        this.url = 'http://localhost:3000/api/auth/';
+        this.url = 'https://rajko-meme-app.herokuapp.com/';
         this.user = null;
         this.token = null;
         this.errors = [];
@@ -1635,7 +1635,7 @@ class CommentsService {
     constructor(http, location) {
         this.http = http;
         this.location = location;
-        this.url = 'http://localhost:3000/api/comments/';
+        this.url = 'https://rajko-meme-app.herokuapp.com/';
         this.comments = [];
         this.loadingSubcomments = true;
         this.subcomments = [];
@@ -2092,7 +2092,7 @@ __webpack_require__.r(__webpack_exports__);
 class PostsService {
     constructor(http) {
         this.http = http;
-        this.url = 'http://localhost:3000/api/posts/';
+        this.url = 'https://rajko-meme-app.herokuapp.com/';
         this.page = 1;
         this.order_by = 'created_at';
         this.order = 2;
