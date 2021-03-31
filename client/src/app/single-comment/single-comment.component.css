@@ -11,6 +11,10 @@
   font-size: 0.8rem;
 }
 
+.comment_body {
+  cursor: pointer;
+}
+
 .comment_author {
   font-weight: bold;
 }

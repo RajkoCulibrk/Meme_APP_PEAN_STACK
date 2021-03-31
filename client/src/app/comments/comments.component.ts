@@ -24,7 +24,6 @@ export class CommentsComponent implements OnInit {
   getPostId() {
     this.route.params.pipe(map((p) => p.id)).subscribe((x) => {
       this.postId = x;
-      console.log(this.postId);
     });
   }
 }

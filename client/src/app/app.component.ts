@@ -13,7 +13,7 @@ export class AppComponent implements OnInit {
   current = 0;
   constructor(
     private userService: UserService,
-    private postsProvider: PostsService
+    public postsProvider: PostsService
   ) {}
   ngOnInit() {
     this.userService.getUser();
@@ -28,6 +28,11 @@ export class AppComponent implements OnInit {
     let nav = document.querySelector('.navbar') as HTMLElement;
     document.addEventListener('scroll', () => {
       let scrolled = window.pageYOffset;
+      if (scrolled > 1000) {
+        this.postsProvider.showToTheTop = true;
+      } else {
+        this.postsProvider.showToTheTop = false;
+      }
       if (this.current - scrolled < 0) {
         nav.style.transform = 'translateY(-120%)';
       } else {

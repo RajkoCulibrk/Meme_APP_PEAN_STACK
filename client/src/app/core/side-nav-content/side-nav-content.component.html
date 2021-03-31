@@ -1,22 +1,38 @@
 <div class="content">
   <img src="../../../assets/jao.png" alt="jao" />
-  <div *ngIf="userProvider.user" class="side-nav-item">
+  <div
+    [routerLink]="['/mymemes']"
+    *ngIf="userProvider.user"
+    class="side-nav-item"
+  >
     <fa-icon class="mr-2" [icon]="faUserAlt"></fa-icon> My Memes
   </div>
-  <div *ngIf="userProvider.user" class="side-nav-item">
+  <div
+    [routerLink]="['/liked']"
+    *ngIf="userProvider.user"
+    class="side-nav-item"
+  >
     <fa-icon class="mr-2" [icon]="faHeart"></fa-icon> Memes I Like
   </div>
 
-  <div class="side-nav-item">
-    <a [routerLink]="['/new']" routerLinkActive="router-link-active">
-      <fa-icon class="mr-2" [icon]="faPlus"></fa-icon>
-      Post a meme
-    </a>
+  <div
+    class="side-nav-item"
+    [routerLink]="['/new']"
+    routerLinkActive="router-link-active"
+  >
+    <fa-icon class="mr-2" [icon]="faPlus"></fa-icon>
+    Post a meme
   </div>
   <div (click)="logout()" *ngIf="userProvider.user" class="side-nav-item">
     <fa-icon class="mr-2" [icon]="faSignOutAlt"></fa-icon> Logout
   </div>
-  <div (click)="preventPropagation($event)" class="pagination-params">
+  <!-- pagination params -->
+
+  <div
+    *ngIf="currentRoute == '/'"
+    (click)="preventPropagation($event)"
+    class="pagination-params"
+  >
     <div class="form-group">
       <label for="exampleFormControlSelect1">Sort By</label>
       <select

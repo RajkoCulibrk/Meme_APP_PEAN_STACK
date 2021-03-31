@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { GetPostsServer } from './models/GetPostsServer';
 import { Post } from './models/Post';
 import { PostsList } from './models/PostsList';
 
@@ -17,6 +18,8 @@ export class PostsService {
   posts: Post[] = [];
   loadingPosts: boolean = false;
   noContent = false;
+  showToTheTop: boolean = false;
+  myPosts: Post[];
   constructor(private http: HttpClient) {}
 
   getPosts() {
@@ -51,6 +54,7 @@ export class PostsService {
           console.log(e);
         }
       );
+    this.page++;
   }
 
   getSinglePost(id): Observable<Post> {
@@ -59,6 +63,34 @@ export class PostsService {
         return new Post(x.data.post);
       })
     );
+  }
+
+  getLikedPosts(): Observable<Post[]> {
+    return this.http.get<GetPostsServer>(this.url + 'liked').pipe(
+      map((x) => {
+        let serverResponse = new GetPostsServer(x);
+        return serverResponse.data.posts;
+      })
+    );
+  }
+
+  getMyPosts() {
+    return this.http
+      .get<GetPostsServer>(this.url + 'my')
+      .pipe(
+        map((x) => {
+          let serverResponse = new GetPostsServer(x);
+          return serverResponse.data.posts;
+        })
+      )
+      .subscribe(
+        (x) => {
+          this.myPosts = x;
+        },
+        (e) => {
+          console.log(e);
+        }
+      );
   }
 
   checkLikeDislike(id) {
@@ -90,5 +122,9 @@ export class PostsService {
         return new Post(x.data.post);
       })
     );
+  }
+
+  deletePost(id) {
+    return this.http.delete(this.url + id);
   }
 }

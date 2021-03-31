@@ -1,12 +1,31 @@
-.container {
-  margin-top: 70px;
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
 }
+
+@media screen and (min-width: 1000px) {
+  .main {
+    width: 33.33%;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .main {
+    width: 100% !important;
+  }
+}
+/* asdfasfd */
+
 .side {
   width: 33.33%;
 }
 
 .lll {
   position: fixed;
+  top: 0;
   background-color: rgba(82, 82, 82, 0.377);
 
   width: 230px;
@@ -23,15 +42,6 @@
   left: 0;
   right: 0;
   bottom: 0;
-}
-
-.spinner {
-  margin: auto;
-  display: flex;
-  justify-content: center;
-  margin-top: 400px;
-  width: 200px;
-  height: 200px;
 }
 
 @media screen and (min-width: 1000px) {

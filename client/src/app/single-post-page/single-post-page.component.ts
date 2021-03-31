@@ -28,7 +28,6 @@ export class SinglePostPageComponent implements OnInit {
   getPostId() {
     this.route.params.pipe(map((p) => p.id)).subscribe((x) => {
       this.currentPostId = x;
-      console.log(this.currentPostId);
     });
   }
 

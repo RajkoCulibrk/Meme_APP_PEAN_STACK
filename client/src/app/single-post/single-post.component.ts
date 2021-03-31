@@ -4,10 +4,12 @@ import {
   faThumbsUp,
   faThumbsDown,
   faComment,
+  faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { UserService } from '../user-service.service';
 import { Router } from '@angular/router';
 import { PostsService } from '../posts-service.service';
+import { filter } from 'rxjs/operators';
 @Component({
   selector: 'app-single-post',
   templateUrl: './single-post.component.html',
@@ -20,13 +22,16 @@ export class SinglePostComponent implements OnInit {
   faThumbsUp = faThumbsUp;
   faThumbsDown = faThumbsDown;
   faComment = faComment;
+  faTrashAlt = faTrashAlt;
+  currentRoute;
   constructor(
-    private userService: UserService,
+    public userService: UserService,
     private postsService: PostsService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
+    this.currentRoute = this.router.url;
     if (this.userService.user) {
       this.checkLikeDislike(this.post.post_id);
     }
@@ -74,6 +79,24 @@ export class SinglePostComponent implements OnInit {
     return this.postsService.checkLikeDislike(id).subscribe(
       (x) => {
         this.liked = x;
+      },
+      (e) => {
+        console.log(e);
+      }
+    );
+  }
+
+  deletePost() {
+    this.postsService.deletePost(this.post.post_id).subscribe(
+      (x) => {
+        let indexInMyPosts = this.postsService.myPosts.findIndex(
+          (p) => p.post_id == this.post.post_id
+        );
+        let indexInAllPosts = this.postsService.posts.findIndex(
+          (p) => p.post_id == this.post.post_id
+        );
+        this.postsService.myPosts.splice(indexInMyPosts, 1);
+        this.postsService.posts.splice(indexInAllPosts, 1);
       },
       (e) => {
         console.log(e);

@@ -16,6 +16,16 @@
     </div>
     <div class="post_buttons d-flex">
       <button
+        (click)="deletePost()"
+        *ngIf="
+          post?.user_id == userService.user?.user_id &&
+          currentRoute == '/mymemes'
+        "
+        class="btn btn-outline-dark d-flex align-items-center text-danger ml-2"
+      >
+        <fa-icon [icon]="faTrashAlt"></fa-icon>
+      </button>
+      <button
         [routerLink]="['/post', post.post_id]"
         class="btn btn-outline-dark d-flex align-items-center ml-2"
       >

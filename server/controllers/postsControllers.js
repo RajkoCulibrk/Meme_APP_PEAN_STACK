@@ -5,7 +5,6 @@ import ApiError from "../utility/ApiError.js";
 
 const { validationResult } = validator;
 export const addPost = async (req, res, next) => {
-  /* console.log(req); */
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return next(ApiError.badRequest(errors.errors[0].msg));
@@ -21,7 +20,6 @@ export const addPost = async (req, res, next) => {
     );
     res.status(201).json({ data: { post: post.rows[0] } });
   } catch (err) {
-    console.log(err.message);
     next(ApiError.internal(err.message));
   }
 };
@@ -29,6 +27,7 @@ export const addPost = async (req, res, next) => {
 export const getPosts = async (req, res, next) => {
   try {
     let { page, order_by, order, like } = req.query;
+
     if (!like) {
       like = "";
     }
@@ -47,18 +46,18 @@ export const getPosts = async (req, res, next) => {
     if (!approved.includes(order_by)) {
       return next(ApiError.badRequest("Bad order by parameter"));
     }
+
     if (page > 1) {
-      console.log(toString(order_by));
       offset = per_page * (page - 1);
     }
+
     const posts = await pool.query(
       `SELECT * FROM posts_view where LOWER (title) like LOWER ($1)  ORDER BY  ${order_by} ${o} OFFSET $2 LIMIT 2`,
       [`%${like}%`, offset]
     );
-    console.log(page, order_by, order);
+
     res.status(200).json({ data: { posts: posts.rows } });
   } catch (err) {
-    console.log(err.message);
     next(ApiError.internal(err.message));
   }
 };
@@ -76,7 +75,7 @@ export const getSinglePost = async (req, res, next) => {
 
     res.status(200).json({ data: { post: post.rows[0] } });
   } catch (err) {
-    console.log(err.message);
+    next(ApiError.internal("Error at get single post"));
   }
 };
 
@@ -84,26 +83,33 @@ export const postsILike = async (req, res, next) => {
   try {
     const { user } = req;
     const likedPosts = await pool.query(
-      `select 
-    p.post_id,p.title,p.image_public_url,
-    COALESCE(l.likes,0) as likes, 
-    COALESCE(l.dislikes,0) as dislikes from posts as p
-  right join (select post_id, 
-         COUNT(value) filter (where value=true) as likes,
-         COUNT(value) filter (where value=false) as dislikes
-         from likesdislikes
-         WHERE user_id = $1
-          group by post_id
-        
-        ) as l
-         on p.post_id = l.post_id
+      `select * from 
+      (
+        SELECT * FROM likesdislikes where user_id = $1 AND value = true
+      )
+      as l
+      left join posts as p
+      on l.post_id = p.post_id 
     `,
       [user]
     );
     res.status(200).json({ data: { posts: likedPosts.rows } });
   } catch (err) {
-    console.log(err.message);
     next(ApiError.internal("Error at get my liked posts"));
+  }
+};
+
+export const getMyPosts = async (req, res, next) => {
+  try {
+    const { user } = req;
+    const likedPosts = await pool.query(
+      `SELECT * FROM posts_view WHERE user_id = $1 ORDER BY created_at DESC
+    `,
+      [user]
+    );
+    res.status(200).json({ data: { posts: likedPosts.rows } });
+  } catch (err) {
+    next(ApiError.internal("Error at get my posts"));
   }
 };
 
@@ -125,7 +131,6 @@ export const deletePost = async (req, res, next) => {
     await pool.query("DELETE FROM posts WHERE post_id = $1", [id]);
     res.status(204).send();
   } catch (err) {
-    console.log(err.message);
     next(ApiError.internal(err.message));
   }
 };
@@ -153,13 +158,6 @@ export const likeDislike = async (req, res, next) => {
       }
     }
 
-    /*   if (action === "delete") {
-      await pool.query(
-        "DELETE FROM likesdislikes WHERE user_id= $1 AND post_id = $2",
-        [user_id, post_id]
-      );
-      return res.status(202).json({ data: { status: 2 } });
-    } */
     const result = await pool.query(
       "INSERT INTO likesdislikes (post_id, user_id, value) VALUES ($1, $2 ,$3) ON CONFLICT (post_id, user_id) DO UPDATE SET value = EXCLUDED.value RETURNING *",
       [post_id, user_id, action]
@@ -168,7 +166,6 @@ export const likeDislike = async (req, res, next) => {
     res.status(202).json({ data: { status: +result.rows[0].value } });
   } catch (err) {
     next(ApiError.internal("Internal error"));
-    console.log(err.message);
   }
 };
 
@@ -185,6 +182,6 @@ export const checkLikeDislikeStatus = async (req, res, next) => {
     }
     return res.status(200).json({ data: { status: +result.rows[0].value } });
   } catch (err) {
-    console.log(err.message);
+    next(ApiError.internal("Error at check liked lisliked"));
   }
 };

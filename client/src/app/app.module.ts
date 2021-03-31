@@ -21,6 +21,11 @@ import { PostCommentComponent } from './post-comment/post-comment.component';
 
 import { SingleCommentPreviewComponent } from './single-comment-preview/single-comment-preview.component';
 import { SideNavContentComponent } from './core/side-nav-content/side-nav-content.component';
+import { PostsILikeComponent } from './posts-ilike/posts-ilike.component';
+import { MyMemesComponent } from './my-memes/my-memes.component';
+import { AuthGuard } from './auth.guard';
+import { NotFoundComponent } from './not-found/not-found.component';
+import { ScrollToTopComponent } from './core/scroll-to-top/scroll-to-top.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +45,14 @@ import { SideNavContentComponent } from './core/side-nav-content/side-nav-conten
     SingleCommentPreviewComponent,
 
     SideNavContentComponent,
+
+    PostsILikeComponent,
+
+    MyMemesComponent,
+
+    NotFoundComponent,
+
+    ScrollToTopComponent,
   ],
   imports: [
     BrowserModule,
@@ -55,6 +68,7 @@ import { SideNavContentComponent } from './core/side-nav-content/side-nav-conten
       useClass: TokenItnerceptorService,
       multi: true,
     },
+    AuthGuard,
   ],
   bootstrap: [AppComponent],
 })

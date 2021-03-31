@@ -1,0 +1,15 @@
+.scroll {
+  position: fixed;
+  padding: 1rem;
+  z-index: 100;
+  bottom: 1rem;
+  right: 1rem;
+  color: white;
+  background-color: black;
+  transition: all 0.3s ease;
+}
+
+.scroll:hover {
+  color: black;
+  background-color: rgb(187, 183, 183);
+}

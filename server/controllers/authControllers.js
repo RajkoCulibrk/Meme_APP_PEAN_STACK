@@ -31,7 +31,6 @@ export const registerController = async (req, res, next) => {
     const token = jwtGenerator(newUser.rows[0].user_id);
     res.status(201).json({ data: { token } });
   } catch (err) {
-    console.log(err.message);
     return next(ApiError.internal(err.message));
   }
 };
@@ -59,7 +58,6 @@ export const loginController = async (req, res, next) => {
     const token = jwtGenerator(user.rows[0].user_id);
     res.status(200).json({ data: { token } });
   } catch (err) {
-    console.log(err);
     return next(ApiError.internal(err.message));
   }
 };
@@ -74,6 +72,5 @@ export const getUser = async (req, res, next) => {
     res.status(200).json({ data: { user: user.rows[0] } });
   } catch (err) {
     return next(ApiError.notAuthenticated("You are not authorized"));
-    console.log(err);
   }
 };

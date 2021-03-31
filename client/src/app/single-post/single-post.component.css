@@ -2,6 +2,7 @@
   max-width: 50%;
   box-shadow: 4px 4px 10px black;
   justify-content: center;
+  margin: auto;
 }
 
 h5 {

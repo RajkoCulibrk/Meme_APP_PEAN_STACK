@@ -5,10 +5,9 @@ import ApiError from "../utility/ApiError.js";
 export const postComment = async (req, res, next) => {
   try {
     const { body, post_id, reply_to } = req.body;
-    console.log(reply_to);
+
     const user_id = req.user;
     if (reply_to) {
-      console.log("ima reply to");
       const response = await pool.query(
         "INSERT INTO comments (post_id, user_id, body, reply_to) VALUES ($1 , $2 , $3,$4)  RETURNING *",
         [post_id, user_id, body, reply_to]
@@ -34,7 +33,6 @@ export const postComment = async (req, res, next) => {
       res.status(201).json({ data: { comment: commentToSendBack.rows[0] } });
     }
   } catch (err) {
-    console.log(err);
     next(ApiError.internal("Error at post comment"));
   }
 };
@@ -75,7 +73,6 @@ export const likeDislikeComment = async (req, res, next) => {
 
     res.status(202).json({ data: { status: +result.rows[0].value } });
   } catch (err) {
-    console.log(err.message);
     next(ApiError.internal("Internal error"));
   }
 };
@@ -89,7 +86,6 @@ export const getComments = async (req, res, next) => {
     );
     res.status(200).json({ data: { comments: result.rows } });
   } catch (err) {
-    console.log(err.message);
     next(ApiError.internal("Error at get all coments"));
   }
 };
@@ -106,7 +102,6 @@ export const getSingleComment = async (req, res, next) => {
     }
     res.status(200).json({ data: { comment: comment.rows[0] } });
   } catch (err) {
-    console.log(err);
     next(ApiError.internal("Internal server error"));
   }
 };
@@ -120,7 +115,6 @@ export const getSubcomments = async (req, res, next) => {
     );
     res.status(200).json({ data: { comments: result.rows } });
   } catch (err) {
-    console.log(err);
     next(ApiError.internal("Internal server error while getting subcomments"));
   }
 };
@@ -163,6 +157,6 @@ export const checkLikeDislikeStatus = async (req, res, next) => {
     }
     return res.status(200).json({ data: { status: +result.rows[0].value } });
   } catch (err) {
-    console.log(err.message);
+    next(ApiError.internal("error at check like dislike comment"));
   }
 };

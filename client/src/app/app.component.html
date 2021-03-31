@@ -6,4 +6,5 @@
   (closeEvent)="toggleSideNav($event)"
   [showing]="sideNavShowing"
 ></app-side-nav>
+<app-scroll-to-top *ngIf="postsProvider.showToTheTop"></app-scroll-to-top>
 <router-outlet></router-outlet>

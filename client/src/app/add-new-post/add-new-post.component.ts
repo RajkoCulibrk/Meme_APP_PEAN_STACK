@@ -20,6 +20,7 @@ export class AddNewPostComponent implements OnInit {
   faThumbsDown = faThumbsDown;
   src: any = '../../assets/placeholder.jpg';
   form: FormGroup;
+  submitting: boolean = false;
   constructor(
     private fb: FormBuilder,
     private postsService: PostsService,
@@ -38,7 +39,6 @@ export class AddNewPostComponent implements OnInit {
   }
 
   markAsTouched() {
-    console.log('kurcina');
     this.form.get('image').markAsTouched();
   }
 
@@ -62,12 +62,15 @@ export class AddNewPostComponent implements OnInit {
       return;
     }
     event.preventDefault();
+    this.submitting = true;
     let formData = new FormData();
     formData.append('title', this.form.get('title').value);
     formData.append('image', this.form.get('image').value);
     this.postsService.addNewPost(formData).subscribe(
       (x) => {
+        this.submitting = false;
         this.postsService.posts.unshift(x);
+        this.router.navigateByUrl('/');
       },
       (e) => {
         console.log(e);

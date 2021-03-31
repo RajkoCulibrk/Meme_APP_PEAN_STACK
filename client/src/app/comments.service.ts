@@ -25,7 +25,6 @@ export class CommentsService {
         map(
           (x) => {
             this.comments = x.data.comments;
-            console.log(x.data.comments);
 
             this.loadingComments = false;
           },

@@ -1,15 +1,23 @@
-<div class="d-flex flex-column justify-content-center align-items-center">
-  <div class="container">
-    <app-single-post
-      *ngIf="post"
-      class="d-flex justify-content-center mt-5"
-      [post]="post"
-    ></app-single-post>
+<div class="everything mt-0">
+  <div class="side mt-0">
+    <div class="lll mt-0">
+      <app-side-nav-content></app-side-nav-content>
+      <div class="experiment"></div>
+    </div>
   </div>
-  <div class="post-comment mt-2">
-    <app-post-comment [postId]="currentPostId"></app-post-comment>
-  </div>
-  <div class="container-fluid comments-list">
-    <router-outlet></router-outlet>
+  <div class="d-flex flex-column justify-content-center align-items-center">
+    <div class="container">
+      <app-single-post
+        *ngIf="post"
+        class="d-flex justify-content-center mt-5"
+        [post]="post"
+      ></app-single-post>
+    </div>
+    <div class="post-comment mt-2">
+      <app-post-comment [postId]="currentPostId"></app-post-comment>
+    </div>
+    <div class="container-fluid comments-list">
+      <router-outlet></router-outlet>
+    </div>
   </div>
 </div>

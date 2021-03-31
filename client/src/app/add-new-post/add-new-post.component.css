@@ -2,3 +2,107 @@
   margin-top: 100px;
   max-width: 600px;
 }
+
+.card {
+  box-shadow: 4px 4px 12px black;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+}
+
+@media screen and (min-width: 1000px) {
+  .main {
+    width: 33.33%;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .main {
+    width: 100% !important;
+  }
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+}
+
+@media screen and (min-width: 1000px) {
+  .main {
+    width: 33.33%;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .main {
+    width: 100% !important;
+  }
+}
+/* asdfasfd */
+
+.side {
+  width: 33.33%;
+}
+
+.lll {
+  position: fixed;
+  top: 0;
+  background-color: rgba(82, 82, 82, 0.377);
+
+  width: 230px;
+  height: 100vh;
+  box-shadow: 10px 0 5px -2px #888;
+}
+
+.experiment {
+  position: absolute;
+  z-index: -1000;
+  background: url("../../assets/vT04jS.png");
+  opacity: 0.2;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+@media screen and (min-width: 1000px) {
+  .main {
+    width: 33.33%;
+  }
+  .lll {
+    width: 180px;
+  }
+}
+
+@media screen and (min-width: 1150px) {
+  .lll {
+    width: 260px;
+  }
+}
+
+@media screen and (min-width: 1400px) {
+  .lll {
+    width: 400px;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .main {
+    width: 100% !important;
+  }
+  .side {
+    display: none;
+  }
+}
+
+.show {
+  transform: translateX(0%);
+}

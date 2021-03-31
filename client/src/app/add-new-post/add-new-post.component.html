@@ -1,70 +1,82 @@
-<div class="container">
-  <h4 class="text-center">Upload your meme</h4>
-  <form
-    [formGroup]="form"
-    class="d-flex flex-column align-items-center"
-    (ngSubmit)="submitForm($event)"
-  >
-    <div class="form-group w-100">
-      <label for="exampleInputEmail1">Title</label>
-      <input
-        formControlName="title"
-        type="text"
-        class="form-control"
-        id="exampleInputEmail1"
-        aria-describedby="emailHelp"
-        placeholder="Title of your new meme"
-      />
-      <small
-        class="error-message"
-        *ngIf="
-          form.get('title').hasError('required') && form.get('title').touched
-        "
-        >Title is required</small
-      >
+<div class="everything mt-0">
+  <div class="side mt-0">
+    <div class="lll mt-0">
+      <app-side-nav-content></app-side-nav-content>
+      <div class="experiment"></div>
     </div>
-    <div class="input-group mb-3">
-      <div class="custom-file" (click)="markAsTouched()">
+  </div>
+  <div class="container">
+    <h4 class="text-center">Upload your meme</h4>
+    <form
+      [formGroup]="form"
+      class="d-flex flex-column align-items-center"
+      (ngSubmit)="submitForm($event)"
+    >
+      <div class="form-group w-100">
+        <label for="exampleInputEmail1">Title</label>
         <input
-          (change)="onFileChange($event)"
-          type="file"
-          class="custom-file-input"
-          id="inputGroupFile01"
+          formControlName="title"
+          type="text"
+          class="form-control"
+          id="exampleInputEmail1"
+          aria-describedby="emailHelp"
+          placeholder="Title of your new meme"
         />
-        <label class="custom-file-label" for="inputGroupFile01"
-          >Choose file</label
+        <small
+          class="error-message"
+          *ngIf="
+            form.get('title').hasError('required') && form.get('title').touched
+          "
+          >Title is required</small
         >
       </div>
-    </div>
-    <small
-      class="error-message"
-      *ngIf="
-        form.get('image').hasError('required') && form.get('image').touched
-      "
-      >Please pick an image
-    </small>
+      <div class="input-group mb-3">
+        <div class="custom-file" (click)="markAsTouched()">
+          <input
+            (change)="onFileChange($event)"
+            type="file"
+            class="custom-file-input"
+            id="inputGroupFile01"
+          />
+          <label class="custom-file-label" for="inputGroupFile01"
+            >Choose file</label
+          >
+        </div>
+      </div>
+      <small
+        class="error-message mr-auto"
+        *ngIf="
+          form.get('image').hasError('required') && form.get('image').touched
+        "
+        >Please pick an image
+      </small>
 
-    <button [disabled]="!form.valid" type="submit" class="btn btn-primary">
-      Submit
-    </button>
-  </form>
-  <!-- meme preview -->
-  <div class="card mt-2">
-    <h5 class="card-title">
-      {{ form.get("title").value || "The title of your meme" }}
-    </h5>
+      <button [disabled]="!form.valid" type="submit" class="btn btn-primary">
+        <span *ngIf="!submitting">Submit</span>
 
-    <img [src]="src" class="card-img-top" alt="new post" />
-
-    <div class="card-body d-flex justify-content-end">
-      <button class="btn btn-outline-dark d-flex align-items-center">
-        0 &nbsp;
-        <fa-icon [icon]="faThumbsUp"></fa-icon>
+        <div *ngIf="submitting" class="spinner-border text-dark" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
       </button>
-      <button class="btn btn-outline-dark d-flex align-items-center ml-2">
-        0 &nbsp;
-        <fa-icon [icon]="faThumbsDown"></fa-icon>
-      </button>
+    </form>
+    <!-- meme preview -->
+    <div class="card mt-2">
+      <h5 class="card-title">
+        {{ form.get("title").value || "The title of your meme" }}
+      </h5>
+
+      <img [src]="src" class="card-img-top" alt="new post" />
+
+      <div class="card-body d-flex justify-content-end">
+        <button class="btn btn-outline-dark d-flex align-items-center">
+          0 &nbsp;
+          <fa-icon [icon]="faThumbsUp"></fa-icon>
+        </button>
+        <button class="btn btn-outline-dark d-flex align-items-center ml-2">
+          0 &nbsp;
+          <fa-icon [icon]="faThumbsDown"></fa-icon>
+        </button>
+      </div>
     </div>
   </div>
 </div>

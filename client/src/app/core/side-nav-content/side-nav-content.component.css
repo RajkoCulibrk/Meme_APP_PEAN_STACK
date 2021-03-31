@@ -1,22 +1,17 @@
-.content {
-  /* position: fixed; */
-  /* background-color: rgba(131, 139, 153, 0.5) !important; */
-  height: 100%;
-  width: 100%;
-}
-
 .side-nav-item {
   background-color: rgb(78, 76, 76);
   font-weight: bold;
   padding: 0.2rem;
   color: rgb(255, 255, 255);
   margin-top: 0.2rem;
+  cursor: pointer;
 }
-/* .side-nav-item:first-of-type {
-  margin-top: 70px;
-} */
+
 .side-nav-item a {
   color: rgb(255, 255, 255);
+}
+.side-nav-item:first-of-type {
+  margin-top: 30px;
 }
 
 .pagination-params {
@@ -29,6 +24,9 @@
 
 .side-nav-item:hover {
   background-color: rgb(190, 187, 187);
+}
+.side-nav-item:hover {
+  color: rgb(78, 76, 76) !important;
 }
 
 .show {

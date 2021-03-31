@@ -27,8 +27,7 @@ export class UserService {
         (x) => {
           this.token = x.data.token;
           localStorage.setItem('token', x.data.token);
-          console.log(this.token);
-
+          this.router.navigateByUrl('/');
           this.getUser();
         },
         (e) => {
@@ -52,7 +51,6 @@ export class UserService {
           localStorage.setItem('token', this.token);
           this.getUser();
           this.router.navigateByUrl('/');
-          console.log(x);
         },
         (e) => {
           console.log(e.error.msg);

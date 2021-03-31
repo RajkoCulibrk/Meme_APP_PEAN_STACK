@@ -1,15 +1,21 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+
 body,
 html {
   height: 100%;
+  font-family: "Roboto", sans-serif !important;
+  scroll-behavior: smooth;
 }
+
 form.sign {
   margin: auto;
   margin-top: 3rem;
+  box-shadow: 4px 4px 10px black;
   padding: 1rem;
   max-width: 600px;
-  background: rgba(173, 203, 219, 0.808);
+  background: rgba(207, 212, 214, 0.808);
   border-radius: 1rem;
-  max-width: 50%;
+  max-width: 600px;
 }
 
 .sign {
@@ -19,11 +25,17 @@ form.sign {
 .error-message {
   color: red;
   font-weight: bold;
+  font-style: italic;
 }
 
 body {
   background: rgb(230, 230, 230) !important;
 }
+/* @media screen and (max-width: 1100px) {
+  form.sign {
+    max-width: 70%;
+  }
+} */
 
 @media screen and (max-width: 600px) {
   form.sign {

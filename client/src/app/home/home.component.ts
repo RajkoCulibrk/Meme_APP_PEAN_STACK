@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { from } from 'rxjs';
-import { Post } from '../models/Post';
+
 import { PostsService } from '../posts-service.service';
 import { UserService } from '../user-service.service';
 @Component({
@@ -17,24 +16,26 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.infiniteScrolling();
+    if (document.documentElement.scrollHeight.toString()) {
+      this.getPosts();
+    }
   }
 
   getPosts() {
     this.provider.getPosts();
-    this.provider.page++;
   }
 
   infiniteScrolling() {
     let listener = document.addEventListener('scroll', () => {
       let height = document.documentElement.scrollHeight;
+
       let scrolled = window.pageYOffset + window.innerHeight;
       if (
         height - 100 < scrolled &&
         !this.provider.loadingPosts &&
         !this.provider.noContent
       ) {
-        this.provider.page++;
-        this.provider.getPosts();
+        this.getPosts();
       }
     });
   }

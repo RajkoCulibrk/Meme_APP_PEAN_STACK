@@ -1,0 +1,15 @@
+<div class="everything mt-0">
+  <div class="side mt-0">
+    <div class="lll mt-0">
+      <app-side-nav-content></app-side-nav-content>
+      <div class="experiment"></div>
+    </div>
+  </div>
+  <div class="main mt-4">
+    <app-single-post
+      class="d-flex justify-content-center"
+      *ngFor="let post of likedPosts"
+      [post]="post"
+    ></app-single-post>
+  </div>
+</div>

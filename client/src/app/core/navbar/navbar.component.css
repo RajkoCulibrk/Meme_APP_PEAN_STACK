@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Lobster&display=swap");
 .logged-as {
   padding: 0 !important;
   font-size: 0.9rem;
@@ -6,6 +7,16 @@
 .navbar {
   transition: all 0.3s ease-in-out;
   box-shadow: 0 10px 10px -2px gray;
+}
+
+.navbar-brand {
+  font-family: "Lobster", cursive;
+  font-size: 1.5rem !important;
+}
+
+img {
+  width: 60px;
+  height: 40px;
 }
 
 .search {

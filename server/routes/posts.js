@@ -25,8 +25,9 @@ router.post(
   controllers.addPost
 );
 router.get("/", controllers.getPosts);
-router.get("/:id", controllers.getSinglePost);
 router.get("/liked", [authorize], controllers.postsILike);
+router.get("/my", [authorize], controllers.getMyPosts);
+router.get("/:id", controllers.getSinglePost);
 router.delete("/:id", [authorize], controllers.deletePost);
 router.post(
   "/likedislike/:id",
