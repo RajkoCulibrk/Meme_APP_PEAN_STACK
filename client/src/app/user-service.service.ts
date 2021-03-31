@@ -72,7 +72,7 @@ export class UserService {
   }
   getUser(): void {
     this.http
-      .get<{ data: { user: User } }>(this.url + '/user')
+      .get<{ data: { user: User } }>(this.url + 'user')
       .pipe(
         map((x) => {
           return x;
