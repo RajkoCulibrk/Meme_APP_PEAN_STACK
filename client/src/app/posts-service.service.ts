@@ -48,6 +48,12 @@ export class PostsService {
             this.posts.push(p);
           });
           this.loadingPosts = false;
+          let height = document.documentElement.scrollHeight;
+          if (height == window.innerHeight) {
+            console.log('lll');
+
+            this.getPosts();
+          }
         },
         (e) => {
           this.loadingPosts = false;

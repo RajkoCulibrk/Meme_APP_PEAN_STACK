@@ -31,7 +31,7 @@ export const getPosts = async (req, res, next) => {
     if (!like) {
       like = "";
     }
-    const per_page = 2;
+    const per_page = 3;
     let offset = 0;
 
     let o;

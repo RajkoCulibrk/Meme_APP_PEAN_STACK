@@ -35,6 +35,8 @@ export class HomeComponent implements OnInit {
         !this.provider.loadingPosts &&
         !this.provider.noContent
       ) {
+        /*     alert('loading'); */
+
         this.getPosts();
       }
     });

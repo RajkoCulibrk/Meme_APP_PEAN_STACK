@@ -548,6 +548,7 @@ class HomeComponent {
             if (height - 100 < scrolled &&
                 !this.provider.loadingPosts &&
                 !this.provider.noContent) {
+                /*     alert('loading'); */
                 this.getPosts();
             }
         });
@@ -2125,6 +2126,11 @@ class PostsService {
                 this.posts.push(p);
             });
             this.loadingPosts = false;
+            let height = document.documentElement.scrollHeight;
+            if (height == window.innerHeight) {
+                console.log('lll');
+                this.getPosts();
+            }
         }, (e) => {
             this.loadingPosts = false;
             console.log(e);
