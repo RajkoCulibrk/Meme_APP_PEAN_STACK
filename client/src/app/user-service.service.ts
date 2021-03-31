@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class UserService {
-  url: string = 'http://localhost:3000/api/auth/';
+  url: string = 'https://rajko-meme-app.herokuapp.com/';
   user: User = null;
   token: string = null;
   errors: { id: number; message: string }[] = [];

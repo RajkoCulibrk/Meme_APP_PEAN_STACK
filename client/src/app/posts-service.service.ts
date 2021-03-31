@@ -10,7 +10,7 @@ import { PostsList } from './models/PostsList';
   providedIn: 'root',
 })
 export class PostsService {
-  url: string = 'http://localhost:3000/api/posts/';
+  url: string = 'https://rajko-meme-app.herokuapp.com/';
   page = 1;
   order_by = 'created_at';
   order = 2;

@@ -9,7 +9,7 @@ import { Location } from '@angular/common';
   providedIn: 'root',
 })
 export class CommentsService {
-  url: string = 'http://localhost:3000/api/comments/';
+  url: string = 'https://rajko-meme-app.herokuapp.com/';
   loadingComments: boolean;
   comments: Comment[] = [];
   loadingSubcomments: boolean = true;
