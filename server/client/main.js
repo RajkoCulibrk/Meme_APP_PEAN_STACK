@@ -409,14 +409,14 @@ class UserService {
     constructor(http, router) {
         this.http = http;
         this.router = router;
-        this.url = 'https://rajko-meme-app.herokuapp.com/';
+        this.url = 'https://rajko-meme-app.herokuapp.com/api/auth/';
         this.user = null;
         this.token = null;
         this.errors = [];
     }
     register(credentials) {
         this.http
-            .post(this.url + '/register', credentials)
+            .post(this.url + 'register', credentials)
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_0__["map"])((x) => {
             return x;
         }))
@@ -460,7 +460,7 @@ class UserService {
     }
     getUser() {
         this.http
-            .get(this.url + '/user')
+            .get(this.url + 'user')
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_0__["map"])((x) => {
             return x;
         }))
@@ -1635,7 +1635,7 @@ class CommentsService {
     constructor(http, location) {
         this.http = http;
         this.location = location;
-        this.url = 'https://rajko-meme-app.herokuapp.com/';
+        this.url = 'https://rajko-meme-app.herokuapp.com/api/comments/';
         this.comments = [];
         this.loadingSubcomments = true;
         this.subcomments = [];
@@ -2092,7 +2092,7 @@ __webpack_require__.r(__webpack_exports__);
 class PostsService {
     constructor(http) {
         this.http = http;
-        this.url = 'https://rajko-meme-app.herokuapp.com/';
+        this.url = 'https://rajko-meme-app.herokuapp.com/api/posts/';
         this.page = 1;
         this.order_by = 'created_at';
         this.order = 2;
