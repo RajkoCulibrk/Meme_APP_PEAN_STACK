@@ -2093,7 +2093,7 @@ __webpack_require__.r(__webpack_exports__);
 class PostsService {
     constructor(http) {
         this.http = http;
-        this.url = 'http://localhost:3000/api/posts/';
+        this.url = 'https://rajko-meme-app.herokuapp.com/api/posts/';
         this.page = 1;
         this.order_by = 'created_at';
         this.order = 2;
@@ -2104,7 +2104,6 @@ class PostsService {
         this.showToTheTop = false;
     }
     getPosts() {
-        console.log(this.page);
         this.loadingPosts = true;
         let params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_0__["HttpParams"]()
             .set('page', this.page.toString())
