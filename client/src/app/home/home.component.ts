@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { PostsService } from '../posts-service.service';
 import { UserService } from '../user-service.service';
@@ -7,7 +7,7 @@ import { UserService } from '../user-service.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   /*  posts: Post[]; */
   constructor(
     public provider: PostsService,
@@ -16,29 +16,33 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.infiniteScrolling();
-    if (document.documentElement.scrollHeight.toString()) {
+    /*    if (document.documentElement.scrollHeight.toString()) {
       this.getPosts();
-    }
+    } */
   }
 
   getPosts() {
     this.provider.getPosts();
   }
 
+  scrollFunc = () => {
+    let height = document.documentElement.scrollHeight;
+
+    let scrolled = window.pageYOffset + window.innerHeight;
+    if (
+      height - 100 < scrolled &&
+      !this.provider.loadingPosts &&
+      !this.provider.noContent
+    ) {
+      this.getPosts();
+    }
+  };
+
   infiniteScrolling() {
-    let listener = document.addEventListener('scroll', () => {
-      let height = document.documentElement.scrollHeight;
+    document.addEventListener('scroll', this.scrollFunc);
+  }
 
-      let scrolled = window.pageYOffset + window.innerHeight;
-      if (
-        height - 100 < scrolled &&
-        !this.provider.loadingPosts &&
-        !this.provider.noContent
-      ) {
-        /*     alert('loading'); */
-
-        this.getPosts();
-      }
-    });
+  ngOnDestroy() {
+    document.removeEventListener('scroll', this.scrollFunc);
   }
 }

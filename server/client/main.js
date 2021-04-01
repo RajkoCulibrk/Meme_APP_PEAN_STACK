@@ -531,27 +531,30 @@ class HomeComponent {
     constructor(provider, userProvider) {
         this.provider = provider;
         this.userProvider = userProvider;
-    }
-    ngOnInit() {
-        this.infiniteScrolling();
-        if (document.documentElement.scrollHeight.toString()) {
-            this.getPosts();
-        }
-    }
-    getPosts() {
-        this.provider.getPosts();
-    }
-    infiniteScrolling() {
-        let listener = document.addEventListener('scroll', () => {
+        this.scrollFunc = () => {
             let height = document.documentElement.scrollHeight;
             let scrolled = window.pageYOffset + window.innerHeight;
             if (height - 100 < scrolled &&
                 !this.provider.loadingPosts &&
                 !this.provider.noContent) {
-                /*     alert('loading'); */
                 this.getPosts();
             }
-        });
+        };
+    }
+    ngOnInit() {
+        this.infiniteScrolling();
+        /*    if (document.documentElement.scrollHeight.toString()) {
+          this.getPosts();
+        } */
+    }
+    getPosts() {
+        this.provider.getPosts();
+    }
+    infiniteScrolling() {
+        document.addEventListener('scroll', this.scrollFunc);
+    }
+    ngOnDestroy() {
+        document.removeEventListener('scroll', this.scrollFunc);
     }
 }
 HomeComponent.ɵfac = function HomeComponent_Factory(t) { return new (t || HomeComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_posts_service_service__WEBPACK_IMPORTED_MODULE_1__["PostsService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_user_service_service__WEBPACK_IMPORTED_MODULE_2__["UserService"])); };
@@ -1923,7 +1926,7 @@ SingleCommentComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵd
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](2);
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("routerLink", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpureFunction2"](22, _c0, ctx.comment.post_id, ctx.comment.comment_id));
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate2"](" ", ctx.comment.body.charAt(0).toUpperCase(), "", ctx.comment.body.substring(1, ctx.comment.body.length), " ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate2"](" ", ctx.comment.body == null ? null : ctx.comment.body.charAt(0).toUpperCase(), "", ctx.comment.body == null ? null : ctx.comment.body.substring(1, ctx.comment.body.length), " ");
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](3);
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx.comment.user_id == (ctx.userService.user == null ? null : ctx.userService.user.user_id));
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](2);
