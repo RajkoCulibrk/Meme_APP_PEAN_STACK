@@ -19,7 +19,8 @@
     [routerLink]="['/post', comment.post_id, 'comment', comment.comment_id]"
     class="comment_body lead p-1"
   >
-    {{ comment.body | titlecase }}
+    {{ comment.body.charAt(0).toUpperCase()
+    }}{{ comment.body.substring(1, comment.body.length) }}
   </div>
   <div class="comment_footer d-flex flex-column justify-content-end">
     <div class="comment_buttons d-flex ml-auto mb-2">

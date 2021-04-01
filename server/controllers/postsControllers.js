@@ -83,12 +83,12 @@ export const postsILike = async (req, res, next) => {
   try {
     const { user } = req;
     const likedPosts = await pool.query(
-      `select * from 
+      `select p.post_id,p.post_id,p.image_public_url,p.user_id,p.created_at,p.likes,p.dislikes,p.author,p.comments from 
       (
         SELECT * FROM likesdislikes where user_id = $1 AND value = true
       )
       as l
-      left join posts as p
+      left join posts_view as p
       on l.post_id = p.post_id 
     `,
       [user]

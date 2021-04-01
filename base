@@ -1,0 +1,700 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 13.2
+-- Dumped by pg_dump version 13.2
+
+-- Started on 2021-03-31 20:02:22
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 3060 (class 1262 OID 16473)
+-- Name: meme_app; Type: DATABASE; Schema: -; Owner: postgres
+--
+
+CREATE DATABASE meme_app WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE = 'English_United States.1252';
+
+
+ALTER DATABASE meme_app OWNER TO postgres;
+
+\connect meme_app
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 207 (class 1259 OID 24645)
+-- Name: comments; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.comments (
+    comment_id bigint NOT NULL,
+    post_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    body character varying(255) NOT NULL,
+    reply_to bigint,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+
+ALTER TABLE public.comments OWNER TO postgres;
+
+--
+-- TOC entry 206 (class 1259 OID 24643)
+-- Name: comments_comment_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.comments_comment_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.comments_comment_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3061 (class 0 OID 0)
+-- Dependencies: 206
+-- Name: comments_comment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.comments_comment_id_seq OWNED BY public.comments.comment_id;
+
+
+--
+-- TOC entry 211 (class 1259 OID 24770)
+-- Name: comments_view; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.comments_view AS
+SELECT
+    NULL::bigint AS comment_id,
+    NULL::bigint AS post_id,
+    NULL::bigint AS user_id,
+    NULL::character varying(255) AS body,
+    NULL::bigint AS reply_to,
+    NULL::timestamp with time zone AS created_at,
+    NULL::bigint AS likes,
+    NULL::bigint AS dislikes,
+    NULL::character varying(255) AS parrent_comment_author,
+    NULL::bigint AS subcomments,
+    NULL::character varying(255) AS user_name;
+
+
+ALTER TABLE public.comments_view OWNER TO postgres;
+
+--
+-- TOC entry 209 (class 1259 OID 24727)
+-- Name: commentslikesdislikes; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.commentslikesdislikes (
+    id bigint NOT NULL,
+    comment_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    value boolean NOT NULL
+);
+
+
+ALTER TABLE public.commentslikesdislikes OWNER TO postgres;
+
+--
+-- TOC entry 208 (class 1259 OID 24725)
+-- Name: commentslikesdislikes_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.commentslikesdislikes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.commentslikesdislikes_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3062 (class 0 OID 0)
+-- Dependencies: 208
+-- Name: commentslikesdislikes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.commentslikesdislikes_id_seq OWNED BY public.commentslikesdislikes.id;
+
+
+--
+-- TOC entry 205 (class 1259 OID 16587)
+-- Name: likesdislikes; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.likesdislikes (
+    id bigint NOT NULL,
+    post_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    value boolean NOT NULL
+);
+
+
+ALTER TABLE public.likesdislikes OWNER TO postgres;
+
+--
+-- TOC entry 204 (class 1259 OID 16585)
+-- Name: likesdislikes_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.likesdislikes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.likesdislikes_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3063 (class 0 OID 0)
+-- Dependencies: 204
+-- Name: likesdislikes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.likesdislikes_id_seq OWNED BY public.likesdislikes.id;
+
+
+--
+-- TOC entry 203 (class 1259 OID 16531)
+-- Name: posts; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.posts (
+    post_id bigint NOT NULL,
+    title character varying(255) NOT NULL,
+    image_public_url character varying(255) NOT NULL,
+    image_public_id character varying(255) NOT NULL,
+    user_id bigint NOT NULL,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+
+ALTER TABLE public.posts OWNER TO postgres;
+
+--
+-- TOC entry 202 (class 1259 OID 16529)
+-- Name: posts_post_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.posts_post_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.posts_post_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3064 (class 0 OID 0)
+-- Dependencies: 202
+-- Name: posts_post_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.posts_post_id_seq OWNED BY public.posts.post_id;
+
+
+--
+-- TOC entry 201 (class 1259 OID 16487)
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.users (
+    user_id bigint NOT NULL,
+    user_name character varying(255) NOT NULL,
+    user_email character varying(255) NOT NULL,
+    user_password character varying(255) NOT NULL
+);
+
+
+ALTER TABLE public.users OWNER TO postgres;
+
+--
+-- TOC entry 210 (class 1259 OID 24756)
+-- Name: posts_view; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.posts_view AS
+ SELECT p.post_id,
+    p.title,
+    p.image_public_url,
+    p.user_id,
+    p.created_at,
+    p.likes,
+    p.dislikes,
+    p.author,
+    b.comments
+   FROM (( SELECT p_1.post_id,
+            p_1.title,
+            p_1.image_public_url,
+            p_1.user_id,
+            p_1.created_at,
+            p_1.likes,
+            p_1.dislikes,
+            u.user_name AS author
+           FROM (( SELECT p_2.post_id,
+                    p_2.title,
+                    p_2.image_public_url,
+                    p_2.user_id,
+                    p_2.created_at,
+                    COALESCE(l.likes, (0)::bigint) AS likes,
+                    COALESCE(l.dislikes, (0)::bigint) AS dislikes
+                   FROM (public.posts p_2
+                     LEFT JOIN ( SELECT likesdislikes.post_id,
+                            count(likesdislikes.value) FILTER (WHERE (likesdislikes.value = true)) AS likes,
+                            count(likesdislikes.value) FILTER (WHERE (likesdislikes.value = false)) AS dislikes
+                           FROM public.likesdislikes
+                          GROUP BY likesdislikes.post_id) l ON ((p_2.post_id = l.post_id)))
+                  ORDER BY p_2.created_at) p_1
+             LEFT JOIN public.users u ON ((p_1.user_id = u.user_id)))) p
+     LEFT JOIN ( SELECT p_1.post_id,
+            count(c.post_id) AS comments
+           FROM (public.posts p_1
+             LEFT JOIN public.comments c ON ((p_1.post_id = c.post_id)))
+          GROUP BY p_1.post_id) b ON ((p.post_id = b.post_id)));
+
+
+ALTER TABLE public.posts_view OWNER TO postgres;
+
+--
+-- TOC entry 200 (class 1259 OID 16485)
+-- Name: users_user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.users_user_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_user_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3065 (class 0 OID 0)
+-- Dependencies: 200
+-- Name: users_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.users_user_id_seq OWNED BY public.users.user_id;
+
+
+--
+-- TOC entry 2888 (class 2604 OID 24648)
+-- Name: comments comment_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.comments ALTER COLUMN comment_id SET DEFAULT nextval('public.comments_comment_id_seq'::regclass);
+
+
+--
+-- TOC entry 2890 (class 2604 OID 24730)
+-- Name: commentslikesdislikes id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.commentslikesdislikes ALTER COLUMN id SET DEFAULT nextval('public.commentslikesdislikes_id_seq'::regclass);
+
+
+--
+-- TOC entry 2887 (class 2604 OID 16590)
+-- Name: likesdislikes id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.likesdislikes ALTER COLUMN id SET DEFAULT nextval('public.likesdislikes_id_seq'::regclass);
+
+
+--
+-- TOC entry 2885 (class 2604 OID 16534)
+-- Name: posts post_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.posts ALTER COLUMN post_id SET DEFAULT nextval('public.posts_post_id_seq'::regclass);
+
+
+--
+-- TOC entry 2884 (class 2604 OID 16490)
+-- Name: users user_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN user_id SET DEFAULT nextval('public.users_user_id_seq'::regclass);
+
+
+--
+-- TOC entry 3052 (class 0 OID 24645)
+-- Dependencies: 207
+-- Data for Name: comments; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.comments (comment_id, post_id, user_id, body, reply_to, created_at) VALUES (422, 38, 9, 'dfdfadf', NULL, '2021-03-30 16:43:49.639499+02');
+INSERT INTO public.comments (comment_id, post_id, user_id, body, reply_to, created_at) VALUES (423, 38, 9, 'adsf', NULL, '2021-03-30 16:43:51.934267+02');
+INSERT INTO public.comments (comment_id, post_id, user_id, body, reply_to, created_at) VALUES (424, 38, 9, 'asdf', NULL, '2021-03-30 16:43:53.843865+02');
+INSERT INTO public.comments (comment_id, post_id, user_id, body, reply_to, created_at) VALUES (425, 38, 9, 'asdfasdf', 424, '2021-03-30 16:44:26.405491+02');
+INSERT INTO public.comments (comment_id, post_id, user_id, body, reply_to, created_at) VALUES (429, 46, 9, 'sfg', NULL, '2021-03-31 13:27:35.034432+02');
+INSERT INTO public.comments (comment_id, post_id, user_id, body, reply_to, created_at) VALUES (430, 46, 9, 'sfgsfg', 429, '2021-03-31 13:27:45.404532+02');
+
+
+--
+-- TOC entry 3054 (class 0 OID 24727)
+-- Dependencies: 209
+-- Data for Name: commentslikesdislikes; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 3050 (class 0 OID 16587)
+-- Dependencies: 205
+-- Data for Name: likesdislikes; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.likesdislikes (id, post_id, user_id, value) VALUES (491, 37, 9, true);
+INSERT INTO public.likesdislikes (id, post_id, user_id, value) VALUES (492, 40, 9, true);
+INSERT INTO public.likesdislikes (id, post_id, user_id, value) VALUES (494, 43, 9, true);
+INSERT INTO public.likesdislikes (id, post_id, user_id, value) VALUES (495, 38, 9, false);
+INSERT INTO public.likesdislikes (id, post_id, user_id, value) VALUES (481, 34, 9, false);
+
+
+--
+-- TOC entry 3048 (class 0 OID 16531)
+-- Dependencies: 203
+-- Data for Name: posts; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.posts (post_id, title, image_public_url, image_public_id, user_id, created_at) VALUES (34, 'Ekzibit', 'https://res.cloudinary.com/dui23wclz/image/upload/v1616780271/lqknupox6erwjyyhvn6p.jpg', 'lqknupox6erwjyyhvn6p', 9, '2021-03-26 18:37:52.381096+01');
+INSERT INTO public.posts (post_id, title, image_public_url, image_public_id, user_id, created_at) VALUES (37, 'some meme', 'https://res.cloudinary.com/dui23wclz/image/upload/v1617098930/jlia1kynjzby3yi5rdmv.png', 'jlia1kynjzby3yi5rdmv', 9, '2021-03-30 12:08:51.307998+02');
+INSERT INTO public.posts (post_id, title, image_public_url, image_public_id, user_id, created_at) VALUES (38, '123456789', 'https://res.cloudinary.com/dui23wclz/image/upload/v1617099099/kcfftrnjus4m26z6piny.jpg', 'kcfftrnjus4m26z6piny', 9, '2021-03-30 12:11:40.920641+02');
+INSERT INTO public.posts (post_id, title, image_public_url, image_public_id, user_id, created_at) VALUES (40, 'mim', 'https://res.cloudinary.com/dui23wclz/image/upload/v1617127382/zi0apul7cdzvsi3argns.jpg', 'zi0apul7cdzvsi3argns', 9, '2021-03-30 20:03:03.059571+02');
+INSERT INTO public.posts (post_id, title, image_public_url, image_public_id, user_id, created_at) VALUES (43, 'Error 404', 'https://res.cloudinary.com/dui23wclz/image/upload/v1617127747/mgi6qxjtgpohzhaqxr2m.jpg', 'mgi6qxjtgpohzhaqxr2m', 9, '2021-03-30 20:09:08.319815+02');
+INSERT INTO public.posts (post_id, title, image_public_url, image_public_id, user_id, created_at) VALUES (46, 'www', 'https://res.cloudinary.com/dui23wclz/image/upload/v1617186015/xlgy3lhpsskitloyjcyn.jpg', 'xlgy3lhpsskitloyjcyn', 9, '2021-03-31 12:20:15.889484+02');
+INSERT INTO public.posts (post_id, title, image_public_url, image_public_id, user_id, created_at) VALUES (47, 'placeholder', 'https://res.cloudinary.com/dui23wclz/image/upload/v1617190954/bdk3olyuueqd9afc2spu.jpg', 'bdk3olyuueqd9afc2spu', 9, '2021-03-31 13:42:34.6991+02');
+
+
+--
+-- TOC entry 3046 (class 0 OID 16487)
+-- Dependencies: 201
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.users (user_id, user_name, user_email, user_password) VALUES (9, 'rajko', 'rajko93culibrk@gmail.com', '$2b$10$UhdYAdyIwvpuPzguNqO3qu9kuCxlCn/7KLKigEC9j9NW.PFn0AGpa');
+INSERT INTO public.users (user_id, user_name, user_email, user_password) VALUES (10, 'rajko', 'rajko93culibrk@gmail.com', '$2b$10$1l5V9pmUFKHaaTbMgxbNnONB8U.aAA.VH3OJXK.KJn3hT6y2eb2v.');
+INSERT INTO public.users (user_id, user_name, user_email, user_password) VALUES (11, 'rajko', 'rajko933culibrk@gmail.com', '$2b$10$3yN2OWcmxCnC4grIEJGUCe0JcdQlRS7OIkZOGlbA4AOCu73tSycr6');
+INSERT INTO public.users (user_id, user_name, user_email, user_password) VALUES (12, 'kurac', 'kurcevic@gmail.com', '$2b$10$ojC4wpb6ldE2D1Xg/jYG0.e2snYSjF2M9XR8ADnz9OvgKxIVhQCwu');
+INSERT INTO public.users (user_id, user_name, user_email, user_password) VALUES (13, 'kurac', 'kurcedvic@gmail.com', '$2b$10$rrjJ18FzgevC.N5phQxaEeTG/qTa8OzOAQwJnvnO7vJRLoxmGSOsq');
+INSERT INTO public.users (user_id, user_name, user_email, user_password) VALUES (14, 'kurac', 'kufrcedvic@gmail.com', '$2b$10$QufIqZ1HDl7nBvkXx6lYl.95Yrb6uUTq9JMbYN/bj840gx7mCYsGq');
+INSERT INTO public.users (user_id, user_name, user_email, user_password) VALUES (15, 'kurac', 'kufrcedvifc@gmail.com', '$2b$10$l8qvMlIqL.0lI0kHZ/wdyOaBW5D7hQWA/WQKPNppDpYiCoirn46mi');
+INSERT INTO public.users (user_id, user_name, user_email, user_password) VALUES (16, 'kurac', 'kufadfrcedvifc@gmail.com', '$2b$10$.jwqEj.vKBJ8LtS6xml3qOMQeqbyHohLnOqYvDqG9IuYAXzWym1xa');
+INSERT INTO public.users (user_id, user_name, user_email, user_password) VALUES (17, 'kurac', 'kufadfrceadsfdvifc@gmail.com', '$2b$10$wLv4KBB0ZNPYkGc67.W.auDvSufD1WpUyW3UlluArojiWQD2QbZRW');
+INSERT INTO public.users (user_id, user_name, user_email, user_password) VALUES (18, 'kurac', 'kufadasdffrceadsfdvifc@gmail.com', '$2b$10$lNnyYcphZJ9NVr/9c1hUROb1fSGiKgfO6cmx908bTVaK2bqgJbx8S');
+INSERT INTO public.users (user_id, user_name, user_email, user_password) VALUES (19, 'kurac', 'kufadasadsfdffrceadsfdvifc@gmail.com', '$2b$10$lRE99I/ml2rtYvbtFAgf6OgBKCCHKLYe7cUxdvwIA3AEA28rxktQK');
+INSERT INTO public.users (user_id, user_name, user_email, user_password) VALUES (20, 'kurac', 'kufadasasfdffrcsfdvifc@gmail.com', '$2b$10$emhmJ9ggABdFCi6Ti.HxyuazK0qtiZpWLTJam/ROyvtankIVg9OES');
+INSERT INTO public.users (user_id, user_name, user_email, user_password) VALUES (21, 'kurac', 'kufadasasffdffrcsfdvifc@gmail.com', '$2b$10$LSJay0/92NdUXAdOq3ie9ecF4tvMbpZgxdfAF.0ukmH0Kk.xiFZvC');
+INSERT INTO public.users (user_id, user_name, user_email, user_password) VALUES (22, 'kurac', 'kufasasffdffrcdvifc@gmail.com', '$2b$10$AcVOpEY63zwp1wvngx81E.PT1q2HQHp5MdbZhjCiU/092qXRKHcHK');
+INSERT INTO public.users (user_id, user_name, user_email, user_password) VALUES (23, 'kurac', 'kufassffdffrcdvifc@gmail.com', '$2b$10$cg2VpAdbnM5u0LJ.bjfOxemLe5P4IuGdf/LNkjtpRAMxM1yJ.x3KG');
+INSERT INTO public.users (user_id, user_name, user_email, user_password) VALUES (24, 'kurac', 'kuassffdffrcdvifc@gmail.com', '$2b$10$EhPERnRYHndZYvDlo0uXsOXYZ7aTqkBswTmIkjbbZc6Xa45uzzovG');
+INSERT INTO public.users (user_id, user_name, user_email, user_password) VALUES (25, 'pizda', 'pizdamaterina@gmail.com', '$2b$10$lclhAhnWUGsUfhHFJFfCpuARoICiGBU4IAdJvdsnkNQ.9S4xyxYDa');
+INSERT INTO public.users (user_id, user_name, user_email, user_password) VALUES (26, 'pizda', 'pizdamaterhina@gmail.com', '$2b$10$MPqZuGwBiAgqBNJzEAoEOOSmglSZJdBnb5wj1A.rsDWfaVo0mq39i');
+INSERT INTO public.users (user_id, user_name, user_email, user_password) VALUES (27, 'asdf', 'rajksdfadsfo93culibrk@gmail.coma', '$2b$10$p/Ad3cM6T.W1wZILp3oL1Oxgr7Y4jbXpcJx85zgGDPgF7T6.KrLQe');
+INSERT INTO public.users (user_id, user_name, user_email, user_password) VALUES (28, 'efadsf', 'rajko93culibrk@gmail.comd', '$2b$10$ASBncUAihe2YsX8DVz9dmu.KNAjgXi1F/TYol8F/KQvrbR6v7swYW');
+INSERT INTO public.users (user_id, user_name, user_email, user_password) VALUES (29, 'radfadasdf', 'raadsfafdsjko93culibrk@gmail.com', '$2b$10$NmZGitVmN4.dil/rF4i5CuT4m9TrXGgkB03ZnxyIlnHJsNZY1huW.');
+INSERT INTO public.users (user_id, user_name, user_email, user_password) VALUES (30, 'raasdf@gmail.com', 'rajko93cuadfasdfasfdafdslibrk@gmail.com', '$2b$10$H7EEhqYg2iyTnJyjP6XjpO8f5BM4Mgbii5vkUfP5W7C.0srg91zh6');
+INSERT INTO public.users (user_id, user_name, user_email, user_password) VALUES (31, 'asdf', 'adfadf@gmail.com', '$2b$10$92s7sgNWdMK8k05Wf/d2guSDUkBBZIpWP6ha1yECVOdq0YJp8d/le');
+
+
+--
+-- TOC entry 3066 (class 0 OID 0)
+-- Dependencies: 206
+-- Name: comments_comment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.comments_comment_id_seq', 430, true);
+
+
+--
+-- TOC entry 3067 (class 0 OID 0)
+-- Dependencies: 208
+-- Name: commentslikesdislikes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.commentslikesdislikes_id_seq', 70, true);
+
+
+--
+-- TOC entry 3068 (class 0 OID 0)
+-- Dependencies: 204
+-- Name: likesdislikes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.likesdislikes_id_seq', 498, true);
+
+
+--
+-- TOC entry 3069 (class 0 OID 0)
+-- Dependencies: 202
+-- Name: posts_post_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.posts_post_id_seq', 47, true);
+
+
+--
+-- TOC entry 3070 (class 0 OID 0)
+-- Dependencies: 200
+-- Name: users_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.users_user_id_seq', 31, true);
+
+
+--
+-- TOC entry 2900 (class 2606 OID 24650)
+-- Name: comments comments_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.comments
+    ADD CONSTRAINT comments_pkey PRIMARY KEY (comment_id);
+
+
+--
+-- TOC entry 2902 (class 2606 OID 24734)
+-- Name: commentslikesdislikes commentslikesdislikes_comment_id_user_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.commentslikesdislikes
+    ADD CONSTRAINT commentslikesdislikes_comment_id_user_id_key UNIQUE (comment_id, user_id);
+
+
+--
+-- TOC entry 2904 (class 2606 OID 24732)
+-- Name: commentslikesdislikes commentslikesdislikes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.commentslikesdislikes
+    ADD CONSTRAINT commentslikesdislikes_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2896 (class 2606 OID 16592)
+-- Name: likesdislikes likesdislikes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.likesdislikes
+    ADD CONSTRAINT likesdislikes_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2898 (class 2606 OID 16594)
+-- Name: likesdislikes likesdislikes_post_id_user_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.likesdislikes
+    ADD CONSTRAINT likesdislikes_post_id_user_id_key UNIQUE (post_id, user_id);
+
+
+--
+-- TOC entry 2894 (class 2606 OID 16539)
+-- Name: posts posts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.posts
+    ADD CONSTRAINT posts_pkey PRIMARY KEY (post_id);
+
+
+--
+-- TOC entry 2892 (class 2606 OID 16495)
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (user_id);
+
+
+--
+-- TOC entry 3044 (class 2618 OID 24773)
+-- Name: comments_view _RETURN; Type: RULE; Schema: public; Owner: postgres
+--
+
+CREATE OR REPLACE VIEW public.comments_view AS
+ SELECT a.comment_id,
+    a.post_id,
+    a.user_id,
+    a.body,
+    a.reply_to,
+    a.created_at,
+    a.likes,
+    a.dislikes,
+    a.parrent_comment_author,
+    a.subcomments,
+    u.user_name
+   FROM (( SELECT a_1.comment_id,
+            a_1.post_id,
+            a_1.user_id,
+            a_1.body,
+            a_1.reply_to,
+            a_1.created_at,
+            a_1.likes,
+            a_1.dislikes,
+            a_1.parrent_comment_author,
+            b.subcomments
+           FROM (( SELECT a_1_1.comment_id,
+                    a_1_1.post_id,
+                    a_1_1.body,
+                    a_1_1.user_id,
+                    a_1_1.reply_to,
+                    a_1_1.created_at,
+                    a_1_1.likes,
+                    a_1_1.dislikes,
+                    b_1.user_name AS parrent_comment_author
+                   FROM (( SELECT c.comment_id,
+                            c.post_id,
+                            c.user_id,
+                            c.body,
+                            c.reply_to,
+                            c.created_at,
+                            COALESCE(l.likes, (0)::bigint) AS likes,
+                            COALESCE(l.dislikes, (0)::bigint) AS dislikes
+                           FROM (public.comments c
+                             LEFT JOIN ( SELECT commentslikesdislikes.comment_id,
+                                    count(commentslikesdislikes.value) FILTER (WHERE (commentslikesdislikes.value = true)) AS likes,
+                                    count(commentslikesdislikes.value) FILTER (WHERE (commentslikesdislikes.value = false)) AS dislikes
+                                   FROM public.commentslikesdislikes
+                                  GROUP BY commentslikesdislikes.comment_id) l ON ((c.comment_id = l.comment_id)))
+                          ORDER BY c.created_at) a_1_1
+                     LEFT JOIN ( SELECT c.comment_id,
+                            u_1.user_name
+                           FROM (( SELECT c_1.comment_id,
+                                    c_1.post_id,
+                                    c_1.user_id,
+                                    c_1.body,
+                                    c_1.reply_to,
+                                    c_1.created_at,
+                                    COALESCE(l.likes, (0)::bigint) AS likes,
+                                    COALESCE(l.dislikes, (0)::bigint) AS dislikes
+                                   FROM (public.comments c_1
+                                     LEFT JOIN ( SELECT commentslikesdislikes.comment_id,
+    count(commentslikesdislikes.value) FILTER (WHERE (commentslikesdislikes.value = true)) AS likes,
+    count(commentslikesdislikes.value) FILTER (WHERE (commentslikesdislikes.value = false)) AS dislikes
+   FROM public.commentslikesdislikes
+  GROUP BY commentslikesdislikes.comment_id) l ON ((c_1.comment_id = l.comment_id)))
+                                  ORDER BY c_1.created_at) c
+                             LEFT JOIN public.users u_1 ON ((c.user_id = u_1.user_id)))) b_1 ON ((a_1_1.reply_to = b_1.comment_id)))) a_1
+             LEFT JOIN ( SELECT a_1_1.comment_id,
+                    a_1_1.user_id,
+                    count(b_1.reply_to) AS subcomments
+                   FROM (public.comments a_1_1
+                     LEFT JOIN public.comments b_1 ON ((a_1_1.comment_id = b_1.reply_to)))
+                  GROUP BY a_1_1.comment_id) b ON ((a_1.comment_id = b.comment_id)))) a
+     LEFT JOIN public.users u ON ((a.user_id = u.user_id)));
+
+
+--
+-- TOC entry 2908 (class 2606 OID 24651)
+-- Name: comments comments_post_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.comments
+    ADD CONSTRAINT comments_post_id_fkey FOREIGN KEY (post_id) REFERENCES public.posts(post_id) ON DELETE CASCADE;
+
+
+--
+-- TOC entry 2910 (class 2606 OID 24661)
+-- Name: comments comments_reply_to_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.comments
+    ADD CONSTRAINT comments_reply_to_fkey FOREIGN KEY (reply_to) REFERENCES public.comments(comment_id) ON DELETE CASCADE;
+
+
+--
+-- TOC entry 2909 (class 2606 OID 24656)
+-- Name: comments comments_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.comments
+    ADD CONSTRAINT comments_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id) ON DELETE CASCADE;
+
+
+--
+-- TOC entry 2911 (class 2606 OID 24735)
+-- Name: commentslikesdislikes commentslikesdislikes_comment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.commentslikesdislikes
+    ADD CONSTRAINT commentslikesdislikes_comment_id_fkey FOREIGN KEY (comment_id) REFERENCES public.comments(comment_id) ON DELETE CASCADE;
+
+
+--
+-- TOC entry 2912 (class 2606 OID 24740)
+-- Name: commentslikesdislikes commentslikesdislikes_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.commentslikesdislikes
+    ADD CONSTRAINT commentslikesdislikes_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id) ON DELETE CASCADE;
+
+
+--
+-- TOC entry 2906 (class 2606 OID 16595)
+-- Name: likesdislikes likesdislikes_post_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.likesdislikes
+    ADD CONSTRAINT likesdislikes_post_id_fkey FOREIGN KEY (post_id) REFERENCES public.posts(post_id) ON DELETE CASCADE;
+
+
+--
+-- TOC entry 2907 (class 2606 OID 16600)
+-- Name: likesdislikes likesdislikes_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.likesdislikes
+    ADD CONSTRAINT likesdislikes_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id);
+
+
+--
+-- TOC entry 2905 (class 2606 OID 16540)
+-- Name: posts user_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.posts
+    ADD CONSTRAINT user_id FOREIGN KEY (user_id) REFERENCES public.users(user_id);
+
+
+-- Completed on 2021-03-31 20:02:24
+
+--
+-- PostgreSQL database dump complete
+--
+

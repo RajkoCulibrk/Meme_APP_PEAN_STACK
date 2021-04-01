@@ -50,8 +50,6 @@ export class PostsService {
           this.loadingPosts = false;
           let height = document.documentElement.scrollHeight;
           if (height == window.innerHeight) {
-            console.log('lll');
-
             this.getPosts();
           }
         },
@@ -75,6 +73,8 @@ export class PostsService {
     return this.http.get<GetPostsServer>(this.url + 'liked').pipe(
       map((x) => {
         let serverResponse = new GetPostsServer(x);
+        console.log(serverResponse);
+
         return serverResponse.data.posts;
       })
     );
