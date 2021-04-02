@@ -15,7 +15,7 @@ export class PostsILikeComponent implements OnInit {
   ngOnInit(): void {
     this.getPosts();
   }
-
+  /* get liked posts liked by the logged in user */
   getPosts() {
     this.postsProvider.getLikedPosts().subscribe(
       (x) => {

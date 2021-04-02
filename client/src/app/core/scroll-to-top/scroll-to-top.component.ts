@@ -10,7 +10,7 @@ export class ScrollToTopComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {}
-
+  /* scroll to the top of the documnent */
   scroll() {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;

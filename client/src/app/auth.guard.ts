@@ -8,7 +8,7 @@ import { UserService } from './user-service.service';
 })
 export class AuthGuard implements CanActivate {
   constructor(private userProvider: UserService, private router: Router) {}
-
+  /* allow user to go to certain pages only if the user is logged in else redirect him to signin page and display message Please sing in */
   canActivate(): boolean {
     let user = localStorage.getItem('user');
     if (user) {

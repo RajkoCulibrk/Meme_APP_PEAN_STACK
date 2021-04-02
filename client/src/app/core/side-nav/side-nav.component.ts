@@ -23,7 +23,7 @@ export class SideNavComponent implements OnInit {
   constructor(public userProvider: UserService) {}
 
   ngOnInit(): void {}
-
+  /* close side naw */
   close() {
     this.closeEvent.emit(false);
   }

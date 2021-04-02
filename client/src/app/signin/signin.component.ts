@@ -25,6 +25,7 @@ export class SigninComponent implements OnInit {
       password: new FormControl('', [Validators.required]),
     });
   }
+  /* send loggin vredentials to server and get authorization token */
   login() {
     this.provider.login(this.form.value);
   }

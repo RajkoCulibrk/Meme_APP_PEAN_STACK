@@ -31,12 +31,14 @@ export class SinglePostComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    /* get the current url so we can dinamiclz display delete button (only on my posts page) */
     this.currentRoute = this.router.url;
+    /* if user is logged in check if he has liked or disliked the post */
     if (this.userService.user) {
       this.checkLikeDislike(this.post.post_id);
     }
   }
-
+  /* like or dislike a single post */
   likeDislike(action) {
     if (!this.userService.user) {
       this.userService.setError('Please sign in first!');
@@ -46,6 +48,7 @@ export class SinglePostComponent implements OnInit {
 
     this.postsService.likeDislikePost(this.post.post_id, action).subscribe(
       (x) => {
+        /* complicated checks I know :) for checking should we increment , decrement likes or dislikes number of a single comment there is a certain number of combination of cases . Maybe there was a better implementation but i went with this one. If the server response was different it could have been easeier i guess. */
         if (this.liked == 2 && action) {
           this.post.likes++;
         }
@@ -66,7 +69,7 @@ export class SinglePostComponent implements OnInit {
           this.post.likes--;
           this.post.dislikes++;
         }
-
+        /* set liked value to the value of respnse from server */
         this.liked = x;
       },
       (e) => {
@@ -86,9 +89,11 @@ export class SinglePostComponent implements OnInit {
     );
   }
 
+  /* delete single post based on its id */
   deletePost() {
     this.postsService.deletePost(this.post.post_id).subscribe(
       (x) => {
+        /* remove the deleted post from posts and myPosts array if it exists there so we do not have to refresh the page or refetch data */
         let indexInMyPosts = this.postsService.myPosts.findIndex(
           (p) => p.post_id == this.post.post_id
         );

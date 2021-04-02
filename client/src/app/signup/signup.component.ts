@@ -36,7 +36,7 @@ export class SignupComponent implements OnInit {
       }
     );
   }
-
+  /* custom validator for comparing the values of password input field and confirm password input field */
   comparePasswords(password, password2) {
     return (formGroup: FormGroup) => {
       const pas = formGroup.controls[password];
@@ -49,14 +49,13 @@ export class SignupComponent implements OnInit {
       }
     };
   }
-
+  /* register a new user */
   register() {
     let credentials = {
       name: this.form.get('username').value,
       email: this.form.get('email').value,
       password: this.form.get('password').value,
     };
-    console.log(credentials);
 
     this.provider.register(credentials);
   }

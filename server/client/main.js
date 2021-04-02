@@ -66,6 +66,7 @@ class SigninComponent {
             password: new _angular_forms__WEBPACK_IMPORTED_MODULE_0__["FormControl"]('', [_angular_forms__WEBPACK_IMPORTED_MODULE_0__["Validators"].required]),
         });
     }
+    /* send loggin vredentials to server and get authorization token */
     login() {
         this.provider.login(this.form.value);
     }
@@ -212,13 +213,16 @@ class AddNewPostComponent {
             image: new _angular_forms__WEBPACK_IMPORTED_MODULE_0__["FormControl"]('', [_angular_forms__WEBPACK_IMPORTED_MODULE_0__["Validators"].required]),
         });
     }
+    /* mark image input field as touched */
     markAsTouched() {
         this.form.get('image').markAsTouched();
     }
+    /* when file is selected set src to the url of the selected file so we can preview it and send it to server for uploading */
     onFileChange(e) {
         let reader = new FileReader();
         const file = e.target.files[0];
         reader.readAsDataURL(file);
+        /* set the value of form field to file value */
         this.form.patchValue({
             image: file,
         });
@@ -226,22 +230,28 @@ class AddNewPostComponent {
             this.src = reader.result;
         };
     }
+    /* submit dta for adding new post to submit value */
     submitForm(event) {
+        /* if user is not logged in send him to loggin page and display an error */
         if (!this.userService.user) {
             this.userService.setError('Please sign in first!');
             this.router.navigateByUrl('/signin');
             return;
         }
         event.preventDefault();
+        /* set submitting to true se we can display a spinner */
         this.submitting = true;
+        /* create form data to be send to server */
         let formData = new FormData();
         formData.append('title', this.form.get('title').value);
         formData.append('image', this.form.get('image').value);
         this.postsService.addNewPost(formData).subscribe((x) => {
+            /* set submitting to false so we hide the spinner */
             this.submitting = false;
             this.postsService.posts.unshift(x);
             this.router.navigateByUrl('/');
         }, (e) => {
+            this.submitting = false;
             console.log(e);
         });
     }
@@ -362,6 +372,7 @@ class MyMemesComponent {
     ngOnInit() {
         this.getMyPosts();
     }
+    /* get posts of a logged in user */
     getMyPosts() {
         this.postsProvider.getMyPosts();
     }
@@ -414,6 +425,7 @@ class UserService {
         this.token = null;
         this.errors = [];
     }
+    /* register a new user */
     register(credentials) {
         this.http
             .post(this.url + 'register', credentials)
@@ -421,16 +433,20 @@ class UserService {
             return x;
         }))
             .subscribe((x) => {
+            /* get token from the response and set its value to local storage */
             this.token = x.data.token;
             localStorage.setItem('token', x.data.token);
+            /* navigate to homepage and get user data */
             this.router.navigateByUrl('/');
             this.getUser();
         }, (e) => {
+            /* in case of error set error message and remove user and token from local storrage */
             this.setError(e.error.msg);
             localStorage.removeItem('token');
             localStorage.removeItem('user');
         });
     }
+    /* login user gets an authoriyation token in the response */
     login(credentials) {
         return this.http
             .post(this.url + 'login', credentials)
@@ -438,26 +454,32 @@ class UserService {
             return x.data.token;
         }))
             .subscribe((x) => {
+            /* get token from the response and set it to local storage , get user data navigate to home */
             this.token = x;
             localStorage.setItem('token', this.token);
             this.getUser();
             this.router.navigateByUrl('/');
         }, (e) => {
+            /* set error message remove user and token from local storage */
             console.log(e.error.msg);
             this.setError(e.error.msg);
-            console.log(this.errors);
             localStorage.removeItem('token');
             localStorage.removeItem('user');
         });
     }
+    /* add new error to error array */
     setError(message) {
+        /* generate unique id for the new error message */
         let id = Date.now();
         this.errors.push({ id, message });
+        /* after adding error to array we want to delete it after some time in this case 3 secs se we set tiemeount to it  from the error array */
         let t = setTimeout(() => {
-            this.errors.length = 0;
+            let errorIndex = this.errors.findIndex((e) => e.id == id);
+            this.errors.splice(errorIndex, 1);
             clearTimeout(t);
         }, 3000);
     }
+    /* get data about user based on authorization token from the local storrage set by the http interceptor */
     getUser() {
         this.http
             .get(this.url + 'user')
@@ -465,14 +487,17 @@ class UserService {
             return x;
         }))
             .subscribe((x) => {
+            /* get user from response and set it to local storrage */
             this.user = x.data.user;
             localStorage.setItem('user', JSON.stringify(this.user));
         }, (e) => {
             console.log(e);
+            /* in case of error remove token and user from localstorrage */
             localStorage.removeItem('user');
             localStorage.removeItem('token');
         });
     }
+    /* logout functionality */
     logout() {
         (this.user = null), (this.token = null);
         localStorage.removeItem('token');
@@ -531,6 +556,7 @@ class HomeComponent {
     constructor(provider, userProvider) {
         this.provider = provider;
         this.userProvider = userProvider;
+        /* function to be added to sroll eventlistener om document fires a getPosts function if certain conditions are met */
         this.scrollFunc = () => {
             let height = document.documentElement.scrollHeight;
             let scrolled = window.pageYOffset + window.innerHeight;
@@ -542,17 +568,18 @@ class HomeComponent {
         };
     }
     ngOnInit() {
+        /* on init set up infinite scrolling */
         this.infiniteScrolling();
-        /*    if (document.documentElement.scrollHeight.toString()) {
-          this.getPosts();
-        } */
     }
+    /* get all posts based on pagination params */
     getPosts() {
         this.provider.getPosts();
     }
+    /* add scroll event  listener to document  */
     infiniteScrolling() {
         document.addEventListener('scroll', this.scrollFunc);
     }
+    /* when the component unmounts we remove the scroll event listener from the document because we want it to fire only when we are on the homepage */
     ngOnDestroy() {
         document.removeEventListener('scroll', this.scrollFunc);
     }
@@ -617,17 +644,17 @@ class PostCommentComponent {
         this.faPaperPlane = _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_0__["faPaperPlane"];
     }
     ngOnInit() { }
-    kurcina() {
-        console.log(this.body);
-    }
     postComment() {
         var _a;
+        /* if user is not logged in send him to loggin page and siplay an error message */
         if (!this.userService.user) {
             this.userService.setError('Please sign in first!');
             this.router.navigateByUrl('/signin');
             return;
         }
+        /* post comment */
         this.commentsProvider.postComment(this.body, this.postId, (_a = this.comment) === null || _a === void 0 ? void 0 : _a.comment_id);
+        /* after submitting reset the body to '' (clear the input field) */
         this.body = '';
     }
 }
@@ -727,6 +754,7 @@ class SingleCommentPreviewComponent {
     ngOnInit() {
         this.getPostId();
     }
+    /* get the id of a post the comment belongs to and than run the function for getting the single comment */
     getPostId() {
         this.route.params.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_0__["map"])((p) => p.id)).subscribe((x) => {
             this.comment_id = x;
@@ -734,18 +762,22 @@ class SingleCommentPreviewComponent {
             this.getSingleComment();
         });
     }
+    /* get the date about a single comment we are previewing */
     getSingleComment() {
         this.commentsService.getSingleComment(this.comment_id).subscribe((x) => {
             this.comment = x;
+            /* after add new comment to the beginning subcomments an comments aray  */
             this.commentsService.getAllComments(this.comment.post_id);
             this.commentsService.getSubcomments(this.comment.comment_id);
             this.loadingComment = false;
+            /* set singleCommentExists to true se we can display the comment we are previewing and not 404 message */
             this.commentsService.singleCommentExists = true;
         }, (e) => {
             this.loadingComment = false;
             this.error = e.error.msg;
         });
     }
+    /* go back to previous page */
     goBack() {
         this.location.back();
     }
@@ -824,6 +856,7 @@ class ScrollToTopComponent {
         this.faArrowUp = _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_0__["faArrowUp"];
     }
     ngOnInit() { }
+    /* scroll to the top of the documnent */
     scroll() {
         document.body.scrollTop = 0;
         document.documentElement.scrollTop = 0;
@@ -838,7 +871,7 @@ ScrollToTopComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdef
     } if (rf & 2) {
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("icon", ctx.faArrowUp);
-    } }, directives: [_fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_2__["FaIconComponent"]], styles: [".scroll[_ngcontent-%COMP%] {\r\n  position: fixed;\r\n  padding: 1rem;\r\n  z-index: 100;\r\n  bottom: 1rem;\r\n  right: 1rem;\r\n  color: white;\r\n  background-color: black;\r\n  transition: all 0.3s ease;\r\n}\r\n\r\n.scroll[_ngcontent-%COMP%]:hover {\r\n  color: black;\r\n  background-color: rgb(187, 183, 183);\r\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNjcm9sbC10by10b3AuY29tcG9uZW50LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFLGVBQWU7RUFDZixhQUFhO0VBQ2IsWUFBWTtFQUNaLFlBQVk7RUFDWixXQUFXO0VBQ1gsWUFBWTtFQUNaLHVCQUF1QjtFQUN2Qix5QkFBeUI7QUFDM0I7O0FBRUE7RUFDRSxZQUFZO0VBQ1osb0NBQW9DO0FBQ3RDIiwiZmlsZSI6InNjcm9sbC10by10b3AuY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIi5zY3JvbGwge1xyXG4gIHBvc2l0aW9uOiBmaXhlZDtcclxuICBwYWRkaW5nOiAxcmVtO1xyXG4gIHotaW5kZXg6IDEwMDtcclxuICBib3R0b206IDFyZW07XHJcbiAgcmlnaHQ6IDFyZW07XHJcbiAgY29sb3I6IHdoaXRlO1xyXG4gIGJhY2tncm91bmQtY29sb3I6IGJsYWNrO1xyXG4gIHRyYW5zaXRpb246IGFsbCAwLjNzIGVhc2U7XHJcbn1cclxuXHJcbi5zY3JvbGw6aG92ZXIge1xyXG4gIGNvbG9yOiBibGFjaztcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMTg3LCAxODMsIDE4Myk7XHJcbn1cclxuIl19 */"] });
+    } }, directives: [_fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_2__["FaIconComponent"]], styles: [".scroll[_ngcontent-%COMP%] {\r\n  position: fixed;\r\n  padding: 1rem;\r\n  z-index: 100;\r\n  bottom: 1rem;\r\n  right: 1rem;\r\n  color: white;\r\n  background-color: black;\r\n  transition: all 0.3s ease;\r\n  cursor: pointer;\r\n}\r\n\r\n.scroll[_ngcontent-%COMP%]:hover {\r\n  color: black;\r\n  background-color: rgb(187, 183, 183);\r\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNjcm9sbC10by10b3AuY29tcG9uZW50LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFLGVBQWU7RUFDZixhQUFhO0VBQ2IsWUFBWTtFQUNaLFlBQVk7RUFDWixXQUFXO0VBQ1gsWUFBWTtFQUNaLHVCQUF1QjtFQUN2Qix5QkFBeUI7RUFDekIsZUFBZTtBQUNqQjs7QUFFQTtFQUNFLFlBQVk7RUFDWixvQ0FBb0M7QUFDdEMiLCJmaWxlIjoic2Nyb2xsLXRvLXRvcC5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLnNjcm9sbCB7XHJcbiAgcG9zaXRpb246IGZpeGVkO1xyXG4gIHBhZGRpbmc6IDFyZW07XHJcbiAgei1pbmRleDogMTAwO1xyXG4gIGJvdHRvbTogMXJlbTtcclxuICByaWdodDogMXJlbTtcclxuICBjb2xvcjogd2hpdGU7XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogYmxhY2s7XHJcbiAgdHJhbnNpdGlvbjogYWxsIDAuM3MgZWFzZTtcclxuICBjdXJzb3I6IHBvaW50ZXI7XHJcbn1cclxuXHJcbi5zY3JvbGw6aG92ZXIge1xyXG4gIGNvbG9yOiBibGFjaztcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMTg3LCAxODMsIDE4Myk7XHJcbn1cclxuIl19 */"] });
 
 
 /***/ }),
@@ -911,11 +944,14 @@ class SinglePostComponent {
         this.faTrashAlt = _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_0__["faTrashAlt"];
     }
     ngOnInit() {
+        /* get the current url so we can dinamiclz display delete button (only on my posts page) */
         this.currentRoute = this.router.url;
+        /* if user is logged in check if he has liked or disliked the post */
         if (this.userService.user) {
             this.checkLikeDislike(this.post.post_id);
         }
     }
+    /* like or dislike a single post */
     likeDislike(action) {
         if (!this.userService.user) {
             this.userService.setError('Please sign in first!');
@@ -923,6 +959,7 @@ class SinglePostComponent {
             return;
         }
         this.postsService.likeDislikePost(this.post.post_id, action).subscribe((x) => {
+            /* complicated checks I know :) for checking should we increment , decrement likes or dislikes number of a single comment there is a certain number of combination of cases . Maybe there was a better implementation but i went with this one. If the server response was different it could have been easeier i guess. */
             if (this.liked == 2 && action) {
                 this.post.likes++;
             }
@@ -943,6 +980,7 @@ class SinglePostComponent {
                 this.post.likes--;
                 this.post.dislikes++;
             }
+            /* set liked value to the value of respnse from server */
             this.liked = x;
         }, (e) => {
             console.log(e);
@@ -955,8 +993,10 @@ class SinglePostComponent {
             console.log(e);
         });
     }
+    /* delete single post based on its id */
     deletePost() {
         this.postsService.deletePost(this.post.post_id).subscribe((x) => {
+            /* remove the deleted post from posts and myPosts array if it exists there so we do not have to refresh the page or refetch data */
             let indexInMyPosts = this.postsService.myPosts.findIndex((p) => p.post_id == this.post.post_id);
             let indexInAllPosts = this.postsService.posts.findIndex((p) => p.post_id == this.post.post_id);
             this.postsService.myPosts.splice(indexInMyPosts, 1);
@@ -1074,6 +1114,7 @@ class SideNavComponent {
         this.closeEvent = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
     }
     ngOnInit() { }
+    /* close side naw */
     close() {
         this.closeEvent.emit(false);
     }
@@ -1222,6 +1263,7 @@ class NavbarComponent {
         this.showSearch = false;
         this.showHideSideNav = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
     }
+    /* subscribe to url events and get the value of current route so we can dinamicly display some data in the navbar */
     ngOnInit() {
         this.router.events
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["filter"])((event) => event instanceof _angular_router__WEBPACK_IMPORTED_MODULE_2__["NavigationEnd"]))
@@ -1229,10 +1271,13 @@ class NavbarComponent {
             this.currentRoute = event.url;
         });
     }
+    /* show hid side nav */
     toggleSideNav() {
         this.showHideSideNav.emit(!this.sideNavShowing);
     }
+    /* show hide search field */
     toggleSearch() {
+        /* reset pagination params and get posts again from server */
         if (this.showSearch && this.postsProvider.like) {
             this.postsProvider.like = '';
             this.postsProvider.page = 1;
@@ -1240,6 +1285,7 @@ class NavbarComponent {
             this.postsProvider.getPosts();
         }
         this.showSearch = !this.showSearch;
+        /* focus on the serarch input field */
         if (this.showSearch) {
             let t = setTimeout(() => {
                 this.divView.nativeElement.focus();
@@ -1247,6 +1293,7 @@ class NavbarComponent {
             }, 50);
         }
     }
+    /* set like value to the value of the input field set pagination param page to 1 reset the posts array to [] , get posts with those new params */
     search(e) {
         this.postsProvider.like = e.target.value;
         this.postsProvider.page = 1;
@@ -1339,13 +1386,18 @@ class AppComponent {
         this.current = 0;
     }
     ngOnInit() {
+        /* on initial load of the app we try to get the user data based on the token in the local storage if the token does not exist or it is not valid anymore the funcionality of getUser() function will reset everything and loggout the user automaticly */
         this.userService.getUser();
+        /* set up onscroll event listener */
         this.regulate();
+        /* get posts on initial load of the app se we see some post right away */
         this.postsProvider.getPosts();
     }
+    /* show hid sidenav */
     toggleSideNav(e) {
         this.sideNavShowing = e;
     }
+    /* this function regulates movement of navbar if we scroll down the navbar goes up and disapears and vice-versa , and show back to the top component if we scroll past certain point*/
     regulate() {
         let nav = document.querySelector('.navbar');
         document.addEventListener('scroll', () => {
@@ -1567,8 +1619,10 @@ class CommentsComponent {
     }
     ngOnInit() {
         this.getPostId();
+        /* get all coments based on the id from hte route */
         this.commentsProvider.getAllComments(this.postId);
     }
+    /* get post id from the route */
     getPostId() {
         this.route.params.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_0__["map"])((p) => p.id)).subscribe((x) => {
             this.postId = x;
@@ -1645,12 +1699,15 @@ class CommentsService {
         this.subcomments = [];
         this.singleCommentExists = false;
     }
+    /* get all coments of a post based on its id */
     getAllComments(id) {
+        /* set loading comments to true so we can show a spinner */
         this.loadingComments = true;
         this.http
             .get(this.url + 'post/' + id)
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["map"])((x) => {
             this.comments = x.data.comments;
+            /* set loading comments to false */
             this.loadingComments = false;
         }, (e) => {
             console.log(e);
@@ -1658,39 +1715,41 @@ class CommentsService {
         }))
             .subscribe();
     }
+    /* like or dislike a comment based on the action provided */
     likeDislikeComment(id, action) {
         return this.http.post(this.url + 'likedislike/' + id, { action }).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["map"])((x) => {
             return x.data.status;
         }));
     }
+    /* check if a comment is liked or disliked by the user or neither */
     checkLikeDislike(id) {
-        /*   const token = localStorage.getItem('token');
-        const headers = new HttpHeaders({
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        }); */
         return this.http
             .get(this.url + 'likedislike/' + id /* , { headers } */)
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["map"])((x) => {
             return x.data.status;
         }));
     }
+    /* delete a comment based on its id */
     deleteComment(id, partOfPreviewComponent) {
         this.http.delete(this.url + id).subscribe((x) => {
+            /* if partOfPreviewComponent true send user back to rpevious page after deletion */
             if (partOfPreviewComponent) {
                 this.location.back();
                 this.singleCommentExists = false;
             }
+            /* the following code deletes the comment from comments array and subcomments array if it exists the so we do not see it  on screen anymore */
             let indexInComments = this.comments.findIndex((x) => x.comment_id == id);
             let indexInSubcomments = this.subcomments.findIndex((x) => x.comment_id == id);
             this.comments.splice(indexInComments, 1);
             this.subcomments.splice(indexInSubcomments, 1);
+            /* removing comments that are replies to this comment */
             this.removeDependingComments(id);
             this.removeDependingSubcomments(id);
         }, (e) => {
             console.log(e);
         });
     }
+    /* remove comments that are replies to the comment the id parameter belogs to */
     removeDependingComments(id) {
         let dependingComments = this.comments.filter((c) => c.reply_to == id);
         dependingComments.forEach((d) => {
@@ -1699,6 +1758,7 @@ class CommentsService {
             this.removeDependingComments(d.comment_id);
         });
     }
+    /* remove comments that are replies to the comment the id parameter belogs to */
     removeDependingSubcomments(id) {
         let dependingSubcomments = this.subcomments.filter((c) => c.reply_to == id);
         dependingSubcomments.forEach((d) => {
@@ -1706,6 +1766,7 @@ class CommentsService {
             this.subcomments.splice(index, 1);
         });
     }
+    /* post a new comment */
     postComment(body, post_id, reply_to) {
         let payload = { body, post_id };
         if (reply_to) {
@@ -1727,11 +1788,13 @@ class CommentsService {
             console.log(e);
         });
     }
+    /* get single comment based on id */
     getSingleComment(id) {
         return this.http.get(this.url + id).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["map"])((x) => {
             return new _models_Comment__WEBPACK_IMPORTED_MODULE_0__["Comment"](x.data.comment);
         }));
     }
+    /* get all subocments of a comment based on its id */
     getSubcomments(id) {
         return this.http
             .get(this.url + 'subcomments/' + id)
@@ -1820,10 +1883,12 @@ class SingleCommentComponent {
         this.showReply = false;
     }
     ngOnInit() {
+        /* if user is signed in we run check if he has liked or disliked the comment */
         if (this.userService.user) {
             this.checkLikeDislike(this.comment.comment_id);
         }
     }
+    /* check if user has liked or disliked a comment */
     checkLikeDislike(id) {
         return this.commentsProvider.checkLikeDislike(id).subscribe((x) => {
             this.liked = x;
@@ -1831,7 +1896,9 @@ class SingleCommentComponent {
             console.log(e);
         });
     }
+    /* like or dislike a comment */
     likeDislike(action) {
+        /* if user is not logged in send him to loggin page and display a message */
         if (!this.userService.user) {
             this.userService.setError('Please sign in first!');
             this.router.navigateByUrl('/signin');
@@ -1840,6 +1907,7 @@ class SingleCommentComponent {
         this.commentsProvider
             .likeDislikeComment(this.comment.comment_id, action)
             .subscribe((x) => {
+            /* complicated checks I know :) for checking should we increment , decrement likes or dislikes number of a single comment there is a certain number of combination of cases . Maybe there was a better implementation but i went with this one. If the server response was different it could have been easeier i guess. */
             if (this.liked == 2 && action) {
                 this.comment.likes++;
             }
@@ -1860,14 +1928,17 @@ class SingleCommentComponent {
                 this.comment.likes--;
                 this.comment.dislikes++;
             }
+            /* set the value of liked value to the value from the server response */
             this.liked = x;
         }, (e) => {
             console.log(e);
         });
     }
+    /* hide or show the reply to comment component */
     setShowReply() {
         this.showReply = !this.showReply;
     }
+    /* delete a comment */
     deleteComment() {
         this.commentsProvider.deleteComment(this.comment.comment_id, this.partOfPreviewComponent);
     }
@@ -2010,6 +2081,7 @@ class PostsILikeComponent {
     ngOnInit() {
         this.getPosts();
     }
+    /* get liked posts liked by the logged in user */
     getPosts() {
         this.postsProvider.getLikedPosts().subscribe((x) => {
             this.likedPosts = x;
@@ -2053,6 +2125,7 @@ __webpack_require__.r(__webpack_exports__);
 
 class TokenItnerceptorService {
     constructor() { }
+    /* intercept a HTTP request and set authorization header with bearer token */
     intercept(req, next) {
         let token = localStorage.getItem('token');
         let tokenizedReq = req.clone({
@@ -2105,7 +2178,9 @@ class PostsService {
         this.noContent = false;
         this.showToTheTop = false;
     }
+    /* get all posts for the homepage */
     getPosts() {
+        /* setting loading to true so we can show the spinner */
         this.loadingPosts = true;
         let params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_0__["HttpParams"]()
             .set('page', this.page.toString())
@@ -2118,6 +2193,7 @@ class PostsService {
             return new _models_PostsList__WEBPACK_IMPORTED_MODULE_4__["PostsList"](x.data);
         }))
             .subscribe((x) => {
+            /*if we recieve an empty array from the server that means we have no conten se we want to show no more content warning */
             if (!x.posts.length) {
                 this.noContent = true;
             }
@@ -2128,6 +2204,7 @@ class PostsService {
                 this.posts.push(p);
             });
             this.loadingPosts = false;
+            /* the following lines ensure that if there is no scroller on the screen we load more content se the scroller appears because the loading of more posts happens only on scroll */
             let height = document.documentElement.scrollHeight;
             if (height == window.innerHeight) {
                 this.getPosts();
@@ -2136,20 +2213,23 @@ class PostsService {
             this.loadingPosts = false;
             console.log(e);
         });
+        /* incrementing the page value se in the next run we actually fetch next page data not the same */
         this.page++;
     }
+    /* get single post data based on post id */
     getSinglePost(id) {
         return this.http.get(this.url + id).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["map"])((x) => {
             return new _models_Post__WEBPACK_IMPORTED_MODULE_3__["Post"](x.data.post);
         }));
     }
+    /* get liked posts of a single user */
     getLikedPosts() {
         return this.http.get(this.url + 'liked').pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["map"])((x) => {
             let serverResponse = new _models_GetPostsServer__WEBPACK_IMPORTED_MODULE_2__["GetPostsServer"](x);
-            console.log(serverResponse);
             return serverResponse.data.posts;
         }));
     }
+    /* get posts of logged in user */
     getMyPosts() {
         return this.http
             .get(this.url + 'my')
@@ -2163,28 +2243,27 @@ class PostsService {
             console.log(e);
         });
     }
+    /* check if logged in user has liked or disliked the post */
     checkLikeDislike(id) {
-        /*   const token = localStorage.getItem('token');
-        const headers = new HttpHeaders({
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        }); */
         return this.http
             .get(this.url + 'likedislike/' + id /* , { headers } */)
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["map"])((x) => {
             return x.data.status;
         }));
     }
+    /* like or dislke post based on the value of action parameter that can be true or false */
     likeDislikePost(id, action) {
         return this.http.post(this.url + 'likedislike/' + id, { action }).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["map"])((x) => {
             return x.data.status;
         }));
     }
+    /* add new post */
     addNewPost(formData) {
         return this.http.post(this.url, formData).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["map"])((x) => {
             return new _models_Post__WEBPACK_IMPORTED_MODULE_3__["Post"](x.data.post);
         }));
     }
+    /* delete a post based on its id */
     deletePost(id) {
         return this.http.delete(this.url + id);
     }
@@ -2261,11 +2340,13 @@ class SinglePostPageComponent {
         this.getPostId();
         this.getPost();
     }
+    /* get the post id from the page url */
     getPostId() {
         this.route.params.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_0__["map"])((p) => p.id)).subscribe((x) => {
             this.currentPostId = x;
         });
     }
+    /*get single post based on its id  */
     getPost() {
         this.postsProvider.getSinglePost(this.currentPostId).subscribe((x) => {
             this.post = x;
@@ -2393,6 +2474,7 @@ class SignupComponent {
             validator: this.comparePasswords('password', 'password2'),
         });
     }
+    /* custom validator for comparing the values of password input field and confirm password input field */
     comparePasswords(password, password2) {
         return (formGroup) => {
             const pas = formGroup.controls[password];
@@ -2405,13 +2487,13 @@ class SignupComponent {
             }
         };
     }
+    /* register a new user */
     register() {
         let credentials = {
             name: this.form.get('username').value,
             email: this.form.get('email').value,
             password: this.form.get('password').value,
         };
-        console.log(credentials);
         this.provider.register(credentials);
     }
 }
@@ -2520,6 +2602,7 @@ class AuthGuard {
         this.userProvider = userProvider;
         this.router = router;
     }
+    /* allow user to go to certain pages only if the user is logged in else redirect him to signin page and display message Please sing in */
     canActivate() {
         let user = localStorage.getItem('user');
         if (user) {
@@ -2669,6 +2752,7 @@ class SideNavContentComponent {
         this.faSignOutAlt = _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_0__["faSignOutAlt"];
         this.faPlus = _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_0__["faPlus"];
     }
+    /* get current route so we can dinamicly display side nav comment */
     ngOnInit() {
         this.currentRoute = this.location.path() || '/';
         this.subscription = this.router.events
@@ -2679,24 +2763,29 @@ class SideNavContentComponent {
             }
         });
     }
+    /* logout user */
     logout() {
         this.userProvider.logout();
     }
+    /* stop event propagation */
     preventPropagation(e) {
         e.stopPropagation();
     }
+    /* set order by value and reset pagination parameters and the posts aray to []  and get posts again with those new parameters*/
     setOrderBy(e) {
         this.postsProvider.order_by = e.target.value;
         this.postsProvider.page = 1;
         this.postsProvider.posts.length = 0;
         this.postsProvider.getPosts();
     }
+    /* the same as setOrderBy */
     setOrder(e) {
         this.postsProvider.order = e.target.value;
         this.postsProvider.page = 1;
         this.postsProvider.posts.length = 0;
         this.postsProvider.getPosts();
     }
+    /* on unmount unsubscribe from listening to rout changes*/
     ngOnDestroy() {
         this.subscription.unsubscribe();
     }

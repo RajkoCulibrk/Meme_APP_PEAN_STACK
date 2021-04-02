@@ -1,5 +1,6 @@
 <div class="content">
   <img src="../../../assets/jao.png" alt="jao" />
+  <!-- side nav liks start -->
   <div
     [routerLink]="['/mymemes']"
     *ngIf="userProvider.user"
@@ -26,7 +27,9 @@
   <div (click)="logout()" *ngIf="userProvider.user" class="side-nav-item">
     <fa-icon class="mr-2" [icon]="faSignOutAlt"></fa-icon> Logout
   </div>
-  <!-- pagination params -->
+  <!-- side nav liks end -->
+
+  <!-- pagination params start-->
 
   <div
     *ngIf="currentRoute == '/'"
@@ -58,6 +61,7 @@
       </select>
     </div>
   </div>
+  <!-- pagination params end-->
   <div
     *ngIf="userProvider.user"
     (click)="preventPropagation($event)"

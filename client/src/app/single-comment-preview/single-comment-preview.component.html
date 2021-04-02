@@ -1,4 +1,5 @@
 <div class="container-fluid d-flex flex-column align-content-center">
+  <!-- if the comment does not exist display warning message with link to go back to previous page -->
   <div
     *ngIf="loadingComment"
     style="width: 100px; height: 100px"
@@ -11,7 +12,7 @@
     {{ error }}
     <a (click)="goBack()" class="alert-link"> go back .</a>
   </div>
-
+  <!-- if comment exists show the comment -->
   <app-single-comment
     *ngIf="comment && commentsService.singleCommentExists"
     [comment]="comment"
@@ -20,6 +21,7 @@
   <h4 *ngIf="commentsService.subcomments.length" class="text-center m-2">
     Replies
   </h4>
+  <!-- display subcomments-replies to this comment -->
   <app-single-comment
     class="mt-2"
     *ngFor="let comment of commentsService.subcomments"

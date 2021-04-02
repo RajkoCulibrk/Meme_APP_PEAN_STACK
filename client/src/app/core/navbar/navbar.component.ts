@@ -45,6 +45,7 @@ export class NavbarComponent implements OnInit {
     public postsProvider: PostsService
   ) {}
 
+  /* subscribe to url events and get the value of current route so we can dinamicly display some data in the navbar */
   ngOnInit(): void {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
@@ -53,11 +54,14 @@ export class NavbarComponent implements OnInit {
       });
   }
 
+  /* show hid side nav */
   toggleSideNav() {
     this.showHideSideNav.emit(!this.sideNavShowing);
   }
 
+  /* show hide search field */
   toggleSearch() {
+    /* reset pagination params and get posts again from server */
     if (this.showSearch && this.postsProvider.like) {
       this.postsProvider.like = '';
       this.postsProvider.page = 1;
@@ -66,6 +70,7 @@ export class NavbarComponent implements OnInit {
     }
 
     this.showSearch = !this.showSearch;
+    /* focus on the serarch input field */
     if (this.showSearch) {
       let t = setTimeout(() => {
         this.divView.nativeElement.focus();
@@ -74,7 +79,7 @@ export class NavbarComponent implements OnInit {
       }, 50);
     }
   }
-
+  /* set like value to the value of the input field set pagination param page to 1 reset the posts array to [] , get posts with those new params */
   search(e) {
     this.postsProvider.like = e.target.value;
     this.postsProvider.page = 1;

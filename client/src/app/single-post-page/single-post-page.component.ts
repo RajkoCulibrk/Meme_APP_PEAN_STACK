@@ -24,13 +24,13 @@ export class SinglePostPageComponent implements OnInit {
     this.getPostId();
     this.getPost();
   }
-
+  /* get the post id from the page url */
   getPostId() {
     this.route.params.pipe(map((p) => p.id)).subscribe((x) => {
       this.currentPostId = x;
     });
   }
-
+  /*get single post based on its id  */
   getPost() {
     this.postsProvider.getSinglePost(this.currentPostId).subscribe(
       (x) => {

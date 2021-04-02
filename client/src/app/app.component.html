@@ -6,5 +6,6 @@
   (closeEvent)="toggleSideNav($event)"
   [showing]="sideNavShowing"
 ></app-side-nav>
+<!-- show scroll to the top if we scroll past certain point -->
 <app-scroll-to-top *ngIf="postsProvider.showToTheTop"></app-scroll-to-top>
 <router-outlet></router-outlet>

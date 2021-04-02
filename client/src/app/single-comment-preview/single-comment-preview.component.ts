@@ -26,7 +26,7 @@ export class SingleCommentPreviewComponent implements OnInit {
   ngOnInit(): void {
     this.getPostId();
   }
-
+  /* get the id of a post the comment belongs to and than run the function for getting the single comment */
   getPostId() {
     this.route.params.pipe(map((p) => p.id)).subscribe((x) => {
       this.comment_id = x;
@@ -34,14 +34,16 @@ export class SingleCommentPreviewComponent implements OnInit {
       this.getSingleComment();
     });
   }
-
+  /* get the date about a single comment we are previewing */
   getSingleComment() {
     this.commentsService.getSingleComment(this.comment_id).subscribe(
       (x) => {
         this.comment = x;
+        /* after add new comment to the beginning subcomments an comments aray  */
         this.commentsService.getAllComments(this.comment.post_id);
         this.commentsService.getSubcomments(this.comment.comment_id);
         this.loadingComment = false;
+        /* set singleCommentExists to true se we can display the comment we are previewing and not 404 message */
         this.commentsService.singleCommentExists = true;
       },
       (e) => {
@@ -50,7 +52,7 @@ export class SingleCommentPreviewComponent implements OnInit {
       }
     );
   }
-
+  /* go back to previous page */
   goBack() {
     this.location.back();
   }

@@ -9,7 +9,6 @@ import { CommentsService } from '../comments.service';
   styleUrls: ['./comments.component.css'],
 })
 export class CommentsComponent implements OnInit {
-  /*  @Input() */
   postId: number;
 
   constructor(
@@ -19,8 +18,10 @@ export class CommentsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getPostId();
+    /* get all coments based on the id from hte route */
     this.commentsProvider.getAllComments(this.postId);
   }
+  /* get post id from the route */
   getPostId() {
     this.route.params.pipe(map((p) => p.id)).subscribe((x) => {
       this.postId = x;

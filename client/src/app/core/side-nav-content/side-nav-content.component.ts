@@ -32,7 +32,7 @@ export class SideNavContentComponent implements OnInit, OnDestroy {
 
     public location: Location
   ) {}
-
+  /* get current route so we can dinamicly display side nav comment */
   ngOnInit(): void {
     this.currentRoute = this.location.path() || '/';
     this.subscription = this.router.events
@@ -44,28 +44,30 @@ export class SideNavContentComponent implements OnInit, OnDestroy {
       });
   }
 
+  /* logout user */
   logout() {
     this.userProvider.logout();
   }
 
+  /* stop event propagation */
   preventPropagation(e) {
     e.stopPropagation();
   }
-
+  /* set order by value and reset pagination parameters and the posts aray to []  and get posts again with those new parameters*/
   setOrderBy(e) {
     this.postsProvider.order_by = e.target.value;
     this.postsProvider.page = 1;
     this.postsProvider.posts.length = 0;
     this.postsProvider.getPosts();
   }
-
+  /* the same as setOrderBy */
   setOrder(e) {
     this.postsProvider.order = e.target.value;
     this.postsProvider.page = 1;
     this.postsProvider.posts.length = 0;
     this.postsProvider.getPosts();
   }
-
+  /* on unmount unsubscribe from listening to rout changes*/
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }

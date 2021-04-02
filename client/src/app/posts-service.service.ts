@@ -21,8 +21,9 @@ export class PostsService {
   showToTheTop: boolean = false;
   myPosts: Post[];
   constructor(private http: HttpClient) {}
-
+  /* get all posts for the homepage */
   getPosts() {
+    /* setting loading to true so we can show the spinner */
     this.loadingPosts = true;
     let params = new HttpParams()
       .set('page', this.page.toString())
@@ -39,6 +40,7 @@ export class PostsService {
       )
       .subscribe(
         (x) => {
+          /*if we recieve an empty array from the server that means we have no conten se we want to show no more content warning */
           if (!x.posts.length) {
             this.noContent = true;
           } else {
@@ -48,6 +50,7 @@ export class PostsService {
             this.posts.push(p);
           });
           this.loadingPosts = false;
+          /* the following lines ensure that if there is no scroller on the screen we load more content se the scroller appears because the loading of more posts happens only on scroll */
           let height = document.documentElement.scrollHeight;
           if (height == window.innerHeight) {
             this.getPosts();
@@ -58,9 +61,10 @@ export class PostsService {
           console.log(e);
         }
       );
+    /* incrementing the page value se in the next run we actually fetch next page data not the same */
     this.page++;
   }
-
+  /* get single post data based on post id */
   getSinglePost(id): Observable<Post> {
     return this.http.get<{ data: { post: Post } }>(this.url + id).pipe(
       map((x) => {
@@ -69,17 +73,18 @@ export class PostsService {
     );
   }
 
+  /* get liked posts of a single user */
   getLikedPosts(): Observable<Post[]> {
     return this.http.get<GetPostsServer>(this.url + 'liked').pipe(
       map((x) => {
         let serverResponse = new GetPostsServer(x);
-        console.log(serverResponse);
 
         return serverResponse.data.posts;
       })
     );
   }
 
+  /* get posts of logged in user */
   getMyPosts() {
     return this.http
       .get<GetPostsServer>(this.url + 'my')
@@ -99,12 +104,8 @@ export class PostsService {
       );
   }
 
+  /* check if logged in user has liked or disliked the post */
   checkLikeDislike(id) {
-    /*   const token = localStorage.getItem('token');
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    }); */
     return this.http
       .get(this.url + 'likedislike/' + id /* , { headers } */)
       .pipe(
@@ -114,6 +115,7 @@ export class PostsService {
       );
   }
 
+  /* like or dislke post based on the value of action parameter that can be true or false */
   likeDislikePost(id, action) {
     return this.http.post(this.url + 'likedislike/' + id, { action }).pipe(
       map((x: { data: { status: number } }) => {
@@ -122,6 +124,7 @@ export class PostsService {
     );
   }
 
+  /* add new post */
   addNewPost(formData: FormData): Observable<Post> {
     return this.http.post(this.url, formData).pipe(
       map((x: { data: { post: Post } }) => {
@@ -129,7 +132,7 @@ export class PostsService {
       })
     );
   }
-
+  /* delete a post based on its id */
   deletePost(id) {
     return this.http.delete(this.url + id);
   }

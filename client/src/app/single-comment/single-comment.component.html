@@ -24,6 +24,7 @@
   </div>
   <div class="comment_footer d-flex flex-column justify-content-end">
     <div class="comment_buttons d-flex ml-auto mb-2">
+      <!-- delete comment button will be displayed ony if the id of comments author matches the id of logged in user -->
       <button
         (click)="deleteComment()"
         *ngIf="comment.user_id == userService.user?.user_id"
@@ -65,6 +66,7 @@
         ></fa-icon>
       </button>
     </div>
+    <!-- show post-comment component ony if showReply variable is true -->
     <app-post-comment
       *ngIf="showReply"
       [comment]="comment"

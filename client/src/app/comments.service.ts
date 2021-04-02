@@ -16,8 +16,9 @@ export class CommentsService {
   subcomments: Comment[] = [];
   singleCommentExists: boolean = false;
   constructor(private http: HttpClient, private location: Location) {}
-
+  /* get all coments of a post based on its id */
   getAllComments(id) {
+    /* set loading comments to true so we can show a spinner */
     this.loadingComments = true;
     this.http
       .get<{ data: { comments: Comment[] } }>(this.url + 'post/' + id)
@@ -25,7 +26,7 @@ export class CommentsService {
         map(
           (x) => {
             this.comments = x.data.comments;
-
+            /* set loading comments to false */
             this.loadingComments = false;
           },
           (e) => {
@@ -36,7 +37,7 @@ export class CommentsService {
       )
       .subscribe();
   }
-
+  /* like or dislike a comment based on the action provided */
   likeDislikeComment(id, action) {
     return this.http.post(this.url + 'likedislike/' + id, { action }).pipe(
       map((x: { data: { status: number } }) => {
@@ -44,13 +45,8 @@ export class CommentsService {
       })
     );
   }
-
+  /* check if a comment is liked or disliked by the user or neither */
   checkLikeDislike(id) {
-    /*   const token = localStorage.getItem('token');
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    }); */
     return this.http
       .get(this.url + 'likedislike/' + id /* , { headers } */)
       .pipe(
@@ -60,13 +56,16 @@ export class CommentsService {
       );
   }
 
+  /* delete a comment based on its id */
   deleteComment(id, partOfPreviewComponent?) {
     this.http.delete(this.url + id).subscribe(
       (x) => {
+        /* if partOfPreviewComponent true send user back to rpevious page after deletion */
         if (partOfPreviewComponent) {
           this.location.back();
           this.singleCommentExists = false;
         }
+        /* the following code deletes the comment from comments array and subcomments array if it exists the so we do not see it  on screen anymore */
         let indexInComments = this.comments.findIndex(
           (x) => x.comment_id == id
         );
@@ -76,6 +75,7 @@ export class CommentsService {
 
         this.comments.splice(indexInComments, 1);
         this.subcomments.splice(indexInSubcomments, 1);
+        /* removing comments that are replies to this comment */
         this.removeDependingComments(id);
         this.removeDependingSubcomments(id);
       },
@@ -85,6 +85,7 @@ export class CommentsService {
     );
   }
 
+  /* remove comments that are replies to the comment the id parameter belogs to */
   removeDependingComments(id) {
     let dependingComments = this.comments.filter((c) => c.reply_to == id);
     dependingComments.forEach((d) => {
@@ -93,7 +94,7 @@ export class CommentsService {
       this.removeDependingComments(d.comment_id);
     });
   }
-
+  /* remove comments that are replies to the comment the id parameter belogs to */
   removeDependingSubcomments(id) {
     let dependingSubcomments = this.subcomments.filter((c) => c.reply_to == id);
     dependingSubcomments.forEach((d) => {
@@ -104,6 +105,7 @@ export class CommentsService {
     });
   }
 
+  /* post a new comment */
   postComment(body, post_id, reply_to?) {
     let payload = { body, post_id };
     if (reply_to) {
@@ -133,7 +135,7 @@ export class CommentsService {
         }
       );
   }
-
+  /* get single comment based on id */
   getSingleComment(id): Observable<Comment> {
     return this.http.get<{ data: { comment: Comment } }>(this.url + id).pipe(
       map((x) => {
@@ -141,7 +143,7 @@ export class CommentsService {
       })
     );
   }
-
+  /* get all subocments of a comment based on its id */
   getSubcomments(id) {
     return this.http
       .get<GetCommentsServer>(this.url + 'subcomments/' + id)

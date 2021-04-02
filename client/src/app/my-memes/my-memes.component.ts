@@ -13,7 +13,7 @@ export class MyMemesComponent implements OnInit {
   ngOnInit(): void {
     this.getMyPosts();
   }
-
+  /* get posts of a logged in user */
   getMyPosts() {
     this.postsProvider.getMyPosts();
   }

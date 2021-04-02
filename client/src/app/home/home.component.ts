@@ -15,16 +15,16 @@ export class HomeComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    /* on init set up infinite scrolling */
     this.infiniteScrolling();
-    /*    if (document.documentElement.scrollHeight.toString()) {
-      this.getPosts();
-    } */
   }
 
+  /* get all posts based on pagination params */
   getPosts() {
     this.provider.getPosts();
   }
 
+  /* function to be added to sroll eventlistener om document fires a getPosts function if certain conditions are met */
   scrollFunc = () => {
     let height = document.documentElement.scrollHeight;
 
@@ -38,10 +38,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   };
 
+  /* add scroll event  listener to document  */
   infiniteScrolling() {
     document.addEventListener('scroll', this.scrollFunc);
   }
 
+  /* when the component unmounts we remove the scroll event listener from the document because we want it to fire only when we are on the homepage */
   ngOnDestroy() {
     document.removeEventListener('scroll', this.scrollFunc);
   }

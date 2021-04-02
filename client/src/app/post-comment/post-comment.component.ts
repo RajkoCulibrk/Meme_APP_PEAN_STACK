@@ -23,21 +23,21 @@ export class PostCommentComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {}
-  kurcina() {
-    console.log(this.body);
-  }
 
   postComment() {
+    /* if user is not logged in send him to loggin page and siplay an error message */
     if (!this.userService.user) {
       this.userService.setError('Please sign in first!');
       this.router.navigateByUrl('/signin');
       return;
     }
+    /* post comment */
     this.commentsProvider.postComment(
       this.body,
       this.postId,
       this.comment?.comment_id
     );
+    /* after submitting reset the body to '' (clear the input field) */
     this.body = '';
   }
 }

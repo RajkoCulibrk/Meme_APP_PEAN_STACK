@@ -15,6 +15,7 @@
       <div class="post_date">Date : {{ post.created_at | date }}</div>
     </div>
     <div class="post_buttons d-flex">
+      <!-- show or hide delete button if we are on /mymemes page and the post belongs to the logged in user -->
       <button
         (click)="deletePost()"
         *ngIf="

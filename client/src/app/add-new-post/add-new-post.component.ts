@@ -37,15 +37,16 @@ export class AddNewPostComponent implements OnInit {
       image: new FormControl('', [Validators.required]),
     });
   }
-
+  /* mark image input field as touched */
   markAsTouched() {
     this.form.get('image').markAsTouched();
   }
-
+  /* when file is selected set src to the url of the selected file so we can preview it and send it to server for uploading */
   onFileChange(e) {
     let reader = new FileReader();
     const file = e.target.files[0];
     reader.readAsDataURL(file);
+    /* set the value of form field to file value */
     this.form.patchValue({
       image: file,
     });
@@ -54,25 +55,30 @@ export class AddNewPostComponent implements OnInit {
       this.src = reader.result;
     };
   }
-
+  /* submit dta for adding new post to submit value */
   submitForm(event) {
+    /* if user is not logged in send him to loggin page and display an error */
     if (!this.userService.user) {
       this.userService.setError('Please sign in first!');
       this.router.navigateByUrl('/signin');
       return;
     }
     event.preventDefault();
+    /* set submitting to true se we can display a spinner */
     this.submitting = true;
+    /* create form data to be send to server */
     let formData = new FormData();
     formData.append('title', this.form.get('title').value);
     formData.append('image', this.form.get('image').value);
     this.postsService.addNewPost(formData).subscribe(
       (x) => {
+        /* set submitting to false so we hide the spinner */
         this.submitting = false;
         this.postsService.posts.unshift(x);
         this.router.navigateByUrl('/');
       },
       (e) => {
+        this.submitting = false;
         console.log(e);
       }
     );
